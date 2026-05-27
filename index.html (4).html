@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AquaFlow - Motor Water Billing Engine</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        input, select, textarea { min-height: 44px; }
+        .modal-blur-bg {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            align-items: center; justify-content: center;
+            padding: 12px;
+        }
+        .scroll-card-body {
+            max-height: calc(75vh - 140px);
+            overflow-y: auto;
+        }
+        .thermal-receipt {
+            width: 7.5cm;
+            min-height: 10cm;
+            background: #ffffff;
+            color: #000000;
+            padding: 16px;
+            border: 2px solid #000000;
+            font-family: monospace;
+            font-size: 12px;
+            margin: 10px auto;
+            border-radius: 4px;
+        }
+        .admin-tab-content { display: none; }
+        .admin-tab-content.active { display: block; }
+        @media print {
+            header, .admin-workspace, .system-gateways, .modal-blur-bg:not(#receiptPopupModal), .tab-navigation-bar {
+                display: none !important;
+            }
+            #receiptPopupModal {
+                display: flex !important;
+                background: white !important;
+                position: absolute; left: 0; top: 0; width: 100% !important;
+            }
+            .thermal-receipt { border: none !important; margin: 0 !important; width: 7.5cm !important; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans min-h-screen text-slate-900 antialiased">
+
+    <header class="bg-gradient-to-r from-cyan-950 to-blue-900 text-white py-5 px-4 shadow-md text-center">
+        <h1 class="text-2xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-emerald-200">AQUAFLOW MOTOR BILLING SYSTEM</h1>
+        <p class="text-[10px] font-bold tracking-widest uppercase text-cyan-200 mt-1">💧 Industrial Water Supply Logistics & Ledger</p>
+        
+        <div class="mt-4 flex justify-center gap-2 max-w-sm mx-auto system-gateways">
+            <button onclick="openCustomerSearchWidget()" class="flex-1 bg-cyan-400 hover:bg-cyan-500 text-cyan-950 font-black py-2.5 px-3 rounded-xl shadow text-xs cursor-pointer transition-all">
+                🚰 Check Your Bill Popup (बिल देखें)
+            </button>
+            <button id="lock-toggle-btn" onclick="openWidgetBox('loginPanelModal')" class="bg-white/10 hover:bg-white/20 text-white font-bold py-2.5 px-3 rounded-xl text-xs cursor-pointer transition-all border border-white/10">
+                🔐 Admin Console
+            </button>
+        </div>
+    </header>
+
+    <div id="admin-workspace-panel" class="hidden admin-workspace">
+        <div class="bg-cyan-700 text-white p-2 text-center text-[11px] font-bold flex justify-center items-center gap-3 shadow-inner">
+            <span>🔓 AquaFlow Central Engine Is Operational</span>
+            <button onclick="logoutAdminGate()" class="bg-slate-950 hover:bg-red-700 text-white text-[10px] px-2.5 py-1 rounded-md font-bold transition-colors">Lock System</button>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 mt-4 grid grid-cols-2 gap-3">
+            <div class="bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-3 rounded-xl shadow-sm border border-emerald-400 text-center">
+                <span class="block text-[10px] font-bold uppercase tracking-wider opacity-90">💰 All Total Paid Revenue</span>
+                <span id="dashboard-total-paid" class="text-xl font-black tracking-tight font-mono">₹0</span>
+            </div>
+            <div class="bg-gradient-to-br from-rose-500 to-red-600 text-white p-3 rounded-xl shadow-sm border border-rose-400 text-center">
+                <span class="block text-[10px] font-bold uppercase tracking-wider opacity-90">🚨 All Total System Dues</span>
+                <span id="dashboard-total-dues" class="text-xl font-black tracking-tight font-mono">₹0</span>
+            </div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-2 mt-4 tab-navigation-bar">
+            <div class="flex flex-col gap-1.5 bg-slate-200/80 p-1.5 rounded-xl border border-slate-300 shadow-sm">
+                <button id="btn-tab-reg" onclick="switchAdminFeatureTab('tab-reg')" class="w-full bg-cyan-800 text-white font-black py-2.5 px-3 rounded-lg text-xs text-left pl-4">
+                    👤 1. Add New Account Holder
+                </button>
+                <button id="btn-tab-entry" onclick="switchAdminFeatureTab('tab-entry')" class="w-full bg-slate-100 text-slate-700 font-black py-2.5 px-3 rounded-lg text-xs text-left pl-4">
+                    ⚡ 2. Log Water Usage (Trip Entry)
+                </button>
+                <button id="btn-tab-pay" onclick="switchAdminFeatureTab('tab-pay')" class="w-full bg-slate-100 text-slate-700 font-black py-2.5 px-3 rounded-lg text-xs text-left pl-4">
+                    💳 3. Collect Bill Payments & Details
+                </button>
+                <button id="btn-tab-del" onclick="switchAdminFeatureTab('tab-del')" class="w-full bg-slate-100 text-slate-700 font-black py-2.5 px-3 rounded-lg text-xs text-left pl-4 text-rose-600">
+                    🗑️ 4. Delete Account Holder (Reason Protected)
+                </button>
+            </div>
+        </div>
+
+        <main class="max-w-7xl mx-auto p-2">
+            
+            <div id="tab-reg" class="admin-tab-content active max-w-md mx-auto mt-2">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <h2 class="text-xs font-black text-cyan-950 uppercase tracking-wider border-b pb-2 mb-3">👤 Create New Account Holder Profile</h2>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Holder Full Name *</label>
+                            <input type="text" id="reg-name" placeholder="Enter Full Name" class="w-full p-2 border rounded-lg text-xs font-bold bg-slate-50">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mobile (Optional)</label>
+                                <input type="text" id="reg-mobile" placeholder="Mobile Number" class="w-full p-2 border rounded-lg text-xs bg-slate-50">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Select Year *</label>
+                                <select id="reg-year" class="w-full p-2 border rounded-lg bg-slate-50 text-xs font-bold">
+                                    <option value="2025">2025</option><option value="2026" selected>2026</option><option value="2027">2027</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Address (Optional)</label>
+                            <input type="text" id="reg-address" placeholder="Village / Area Address" class="w-full p-2 border rounded-lg text-xs bg-slate-50">
+                        </div>
+                        <button onclick="processRegisterHolder()" class="w-full bg-cyan-700 hover:bg-cyan-800 text-white font-black py-3 rounded-lg text-xs shadow cursor-pointer mt-1">
+                            🚀 Generate Holder Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-entry" class="admin-tab-content max-w-md mx-auto mt-2">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <h2 class="text-xs font-black text-cyan-950 uppercase tracking-wider border-b pb-2 mb-3">⚡ Log Water Usage / Add Bill Entry</h2>
+                    <div class="space-y-3">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Target Year</label>
+                                <select id="entry-year" onchange="syncAdminDropdownHolders()" class="w-full p-2 border rounded-lg bg-slate-50 text-xs font-bold">
+                                    <option value="2025">2025</option><option value="2026" selected>2026</option><option value="2027">2027</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Billing Month</label>
+                                <select id="entry-month" class="w-full p-2 border rounded-lg bg-slate-50 text-xs font-bold">
+                                    <option value="January">January</option><option value="February">February</option><option value="March">March</option><option value="April">April</option><option value="May">May</option><option value="June">June</option><option value="July">July</option><option value="August">August</option><option value="September">September</option><option value="October">October</option><option value="November">November</option><option value="December">December</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Select Account Holder</label>
+                            <select id="entry-holder-id" class="w-full p-2 border border-cyan-300 rounded-lg bg-cyan-50 text-xs font-black text-cyan-950">
+                                <option value="">-- Choose Account --</option>
+                            </select>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-2">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-[9px] font-bold text-slate-400 uppercase">Date</label>
+                                    <input type="date" id="entry-date" class="w-full p-1.5 border rounded-md text-xs bg-white">
+                                </div>
+                                <div>
+                                    <label class="block text-[9px] font-bold text-slate-400 uppercase">Duration</label>
+                                    <input type="text" id="entry-duration" placeholder="e.g. 2 Hours" class="w-full p-1.5 border rounded-md text-xs bg-white">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[9px] font-bold text-slate-400 uppercase">Amount (₹)</label>
+                                <input type="number" id="entry-amount" placeholder="₹ Amount" class="w-full p-2 border rounded-md text-xs font-black bg-white">
+                            </div>
+                        </div>
+                        <button onclick="commitUsageTripLog()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-3 rounded-lg text-xs shadow cursor-pointer">
+                            ➕ Add This Trip Entry
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-pay" class="admin-tab-content mt-2">
+                <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
+                    <h2 class="text-xs font-black text-cyan-950 uppercase tracking-wider border-b pb-2 mb-3">💳 Collect Payments & View Live Log Breakdown</h2>
+                    <div class="grid grid-cols-1 gap-1.5 mb-3 bg-slate-50 p-2 rounded-lg border max-w-md mx-auto">
+                        <select id="pay-filter-year" onchange="loadHoldersToPaymentRoster()" class="p-2 border rounded-md text-xs bg-white font-bold w-full">
+                            <option value="2025">2025</option><option value="2026" selected>2026</option><option value="2027">2027</option>
+                        </select>
+                        <button onclick="loadHoldersToPaymentRoster()" class="bg-slate-900 text-white font-black py-2.5 rounded-md text-xs cursor-pointer w-full">
+                            🔄 Fetch Active Holders Ledger
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-3 max-w-5xl mx-auto">
+                        <div class="md:col-span-2 border rounded-lg p-1.5 max-h-60 overflow-y-auto bg-slate-50">
+                            <div id="payment-roster-target" class="space-y-1 text-center py-4 text-xs text-slate-400 font-semibold">
+                                Click Fetch to synchronize names...
+                            </div>
+                        </div>
+                        <div id="payment-billing-desk-drawer" class="md:col-span-3 border border-slate-200 rounded-lg p-3 bg-white hidden space-y-3">
+                            <div>
+                                <h3 id="desk-holder-name" class="font-black text-slate-900 text-sm">Account Holder</h3>
+                                <p id="desk-holder-meta" class="text-[10px] text-slate-400 font-bold">UID: --</p>
+                            </div>
+                            <div class="bg-slate-50 border rounded-lg p-2">
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left text-[11px] min-w-[340px]">
+                                        <thead>
+                                            <tr class="bg-slate-800 text-white">
+                                                <th class="p-2 pl-2">Month / Log Detail</th>
+                                                <th class="p-2 text-right">Bill (₹)</th>
+                                                <th class="p-2 text-right text-emerald-300">Paid (₹)</th>
+                                                <th class="p-2 text-right pr-2 text-rose-300">Status / Dues</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="desk-statement-rows" class="divide-y divide-slate-200"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="bg-cyan-50/50 p-2.5 rounded-lg border border-cyan-100 space-y-2">
+                                <div class="grid grid-cols-3 gap-1.5">
+                                    <div>
+                                        <label class="block text-[9px] font-bold text-slate-500 uppercase">Gross Dues</label>
+                                        <input type="number" id="cash-gross-due" readonly class="w-full p-1.5 border bg-slate-100 rounded-md text-xs font-black text-center">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[9px] font-bold text-purple-700 uppercase">Concession</label>
+                                        <input type="number" id="cash-concession" value="0" oninput="calculateLiveCashIntake()" class="w-full p-1.5 border border-purple-200 bg-white rounded-md text-xs font-black text-center">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[9px] font-bold text-emerald-800 uppercase">Net Paid</label>
+                                        <input type="number" id="cash-intake-amount" class="w-full p-1.5 border border-emerald-300 bg-white rounded-md text-xs font-black text-center">
+                                    </div>
+                                </div>
+                                <button onclick="processFinalizeBillPayment()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 rounded-md text-xs shadow cursor-pointer">
+                                    💳 Finalize Payment & Receipt
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-del" class="admin-tab-content max-w-md mx-auto mt-2">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-red-200 bg-red-50/30">
+                    <h2 class="text-xs font-black text-red-950 uppercase tracking-wider border-b border-red-200 pb-2 mb-3">🗑️ Remove Profile (Reason Protected)</h2>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Target Filter Year</label>
+                            <select id="del-year" onchange="syncDeleteAccountHolders()" class="w-full p-2 border rounded-lg bg-white text-xs font-bold">
+                                <option value="2025">2025</option><option value="2026" selected>2026</option><option value="2027">2027</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Select Profile To Delete</label>
+                            <select id="del-holder-id" class="w-full p-2 border border-red-300 rounded-lg bg-white text-xs font-black text-red-950">
+                                <option value="">-- Choose Account --</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-red-700 mb-1">Kyun Delete karna chahte hain? (Reason) *</label>
+                            <textarea id="del-reason" placeholder="Karan enter karein (e.g. Connections closed, left village...)" class="w-full p-2 border border-red-300 bg-white rounded-lg text-xs font-bold focus:ring-1 focus:ring-red-500 outline-none resize-none h-16"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Account Holder ID Darj Karein *</label>
+                            <input type="text" id="del-holder-id-confirm" placeholder="e.g. MTR_2026_1001" class="w-full p-2 border border-red-300 bg-white rounded-lg text-xs font-bold text-center tracking-wider">
+                        </div>
+
+                        <div class="p-2 bg-red-100 rounded-lg text-[10px] text-red-900 font-bold border border-red-200">
+                            ⚠️ Warning: Profile tabhi delete hogi jab dues clear (₹0) honge, Reason bhara hoga aur sahi ID enter karke Delete button dabaenge.
+                        </div>
+                        <button onclick="processDeleteAccountHolderSecure()" class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-3 rounded-lg text-xs shadow cursor-pointer">
+                            🛑 FIR Iske Baad Aap Delete Per Click Kar De
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <div id="admin-lock-screen-notice" class="max-w-xs mx-auto my-12 bg-white p-5 rounded-xl shadow-sm text-center space-y-2 border">
+        <span class="text-2xl text-slate-300">🔒</span>
+        <h3 class="text-xs font-black text-slate-700">Administrative Dashboard Locked</h3>
+        <p class="text-[11px] text-slate-400 font-semibold">Please authenticate to manage motor accounts.</p>
+    </div>
+
+    <div id="alertNotificationModal" class="modal-blur-bg">
+        <div class="bg-white rounded-xl p-4 shadow-2xl max-w-xs w-full text-center border space-y-3">
+            <div class="w-10 h-10 bg-emerald-100 text-emerald-700 text-xl flex items-center justify-center rounded-full mx-auto font-black">✓</div>
+            <h3 class="font-black text-slate-900 text-xs uppercase tracking-wide">Notification Panel</h3>
+            <p id="alert-modal-message-body" class="text-xs font-bold text-slate-600 leading-relaxed"></p>
+            <button onclick="closeWidgetBox('alertNotificationModal')" class="w-full bg-slate-900 text-white font-bold py-2 rounded-lg text-xs cursor-pointer">OK</button>
+        </div>
+    </div>
+
+    <div id="loginPanelModal" class="modal-blur-bg">
+        <div class="bg-white rounded-xl max-w-xs w-full p-4 shadow-2xl relative border">
+            <button onclick="closeWidgetBox('loginPanelModal')" class="absolute top-2 right-3 font-black text-lg text-slate-400">&times;</button>
+            <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center mb-2">System Verification</h4>
+            <input type="password" id="admin-pass-key-input" placeholder="Enter System PIN" class="w-full p-2 border rounded-lg text-xs text-center tracking-widest font-bold">
+            <button onclick="verifyAndUnlockAdminWorkspace()" class="w-full bg-cyan-700 text-white font-black py-2 rounded-lg text-xs mt-2 cursor-pointer shadow-md">Unlock Workspace</button>
+        </div>
+    </div>
+
+    <div id="customerViewModal" class="modal-blur-bg" style="display: none;">
+        <div class="bg-white rounded-2xl max-w-md w-full p-4 shadow-2xl relative flex flex-col max-h-[94vh] border border-slate-300">
+            <button onclick="closeWidgetBox('customerViewModal')" class="absolute top-2 right-2 bg-slate-100 text-slate-500 w-8 h-8 rounded-full flex items-center justify-center font-black text-xl hover:bg-slate-200 transition-colors">&times;</button>
+            
+            <div class="text-center mb-3 border-b pb-2">
+                <h3 class="text-sm font-black text-cyan-950 uppercase tracking-wide">🚰 Water Bill Statement Center</h3>
+                <p class="text-[10px] font-bold text-slate-400">View Paid Bills, Monthly Breakdown & Due Balances</p>
+            </div>
+            
+            <div class="bg-slate-50 p-2.5 rounded-xl border text-xs grid grid-cols-1 gap-2">
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[9px] font-black text-slate-400 uppercase mb-0.5">Financial Year:</label>
+                        <select id="search-year" onchange="syncPublicSearchDropdownHolders()" class="p-2.5 border bg-white rounded-lg font-bold w-full text-xs">
+                            <option value="2025">2025</option><option value="2026" selected>2026</option><option value="2027">2027</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[9px] font-black text-slate-400 uppercase mb-0.5">Account Holder Name:</label>
+                        <select id="search-holder-id" class="p-2.5 border bg-white rounded-lg font-bold w-full text-xs text-slate-800">
+                            <option value="">-- Choose Name --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 mt-1">
+                    <button onclick="triggerHistorySelectionMode('single')" class="bg-cyan-800 hover:bg-cyan-900 text-white font-bold py-2 rounded-lg text-[11px] cursor-pointer shadow-sm transition-all text-center">
+                        📅 1 Month History
+                    </button>
+                    <button onclick="triggerHistorySelectionMode('quad')" class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-2 rounded-lg text-[11px] cursor-pointer shadow-sm transition-all text-center">
+                        📊 4 Month History
+                    </button>
+                </div>
+
+                <div id="single-month-dropdown-wrapper" class="hidden bg-white p-2 rounded-lg border border-cyan-200 mt-1">
+                    <label class="block text-[9px] font-black text-cyan-800 uppercase mb-1">Select History Month:</label>
+                    <select id="search-filter-isolated-month" onchange="executePublicStatementSearch()" class="p-2 border bg-slate-50 rounded-md font-bold w-full text-xs">
+                        <option value="January">January</option><option value="February">February</option><option value="March">March</option><option value="April">April</option><option value="May">May</option><option value="June">June</option><option value="July">July</option><option value="August">August</option><option value="September">September</option><option value="October">October</option><option value="November">November</option><option value="December">December</option>
+                    </select>
+                </div>
+                
+                <button onclick="executePublicStatementSearch()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 rounded-xl text-xs cursor-pointer shadow-sm transition-all mt-1">
+                    🔍 Search Statement Matrix
+                </button>
+            </div>
+            
+            <div id="search-output-viewport" class="scroll-card-body mt-2 space-y-2 pr-1 hidden"></div>
+        </div>
+    </div>
+
+    <div id="receiptPopupModal" class="modal-blur-bg">
+        <div class="bg-white rounded-xl p-3 shadow-2xl relative max-w-sm w-full border text-center">
+            <button onclick="closeWidgetBox('receiptPopupModal')" class="no-print absolute top-1 right-2 font-black text-xl text-slate-400">&times;</button>
+            <div id="thermal-receipt-container" class="thermal-receipt"></div>
+            <div class="no-print mt-2 flex gap-2 justify-center">
+                <button onclick="window.print()" class="bg-cyan-950 text-white font-black py-2 px-4 rounded-lg text-xs shadow cursor-pointer">🖨️ Print Invoice</button>
+                <button onclick="closeWidgetBox('receiptPopupModal')" class="bg-slate-200 text-slate-800 font-bold py-2 px-3 rounded-lg text-xs cursor-pointer">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyAw_f7ew1GMy5HhL9Io-i7zfA3mOQSpn2s",
+          authDomain: "super-educated-class.firebaseapp.com",
+          databaseURL: "https://super-educated-class-default-rtdb.firebaseio.com",
+          projectId: "super-educated-class",
+          storageBucket: "super-educated-class.firebasestorage.app",
+          messagingSenderId: "993892326574",
+          appId: "1:993892326574:web:356ca4361c718aff4da13f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let activeAdminAuthorized = false;
+        let activeDeskHolderId = null;
+        let activeDeskHolderData = null;
+        let currentTimelineFilterRange = "all"; // all, single, quad
+        
+        const CHRONO_MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const MASTER_DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+        window.openWidgetBox = function(id) {
+            const m = document.getElementById(id);
+            if(m) { m.style.display = 'flex'; }
+        }
+        window.closeWidgetBox = function(id) {
+            const m = document.getElementById(id);
+            if(m) { m.style.display = 'none'; }
+        }
+
+        window.openCustomerSearchWidget = function() {
+            openWidgetBox('customerViewModal');
+            syncPublicSearchDropdownHolders();
+        }
+
+        window.triggerHistorySelectionMode = function(mode) {
+            currentTimelineFilterRange = mode;
+            const wrap = document.getElementById('single-month-dropdown-wrapper');
+            if(mode === 'single') {
+                wrap.classList.remove('hidden');
+            } else {
+                wrap.classList.add('hidden');
+            }
+            // Trigger automatic render if user has already selected profile
+            if(document.getElementById('search-holder-id').value) {
+                executePublicStatementSearch();
+            }
+        }
+
+        window.switchAdminFeatureTab = function(tabId) {
+            document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            
+            document.querySelectorAll('.tab-navigation-bar button').forEach(btn => {
+                btn.classList.remove('bg-cyan-800', 'text-white');
+                btn.classList.add('bg-slate-100', 'text-slate-700');
+            });
+            
+            let targetBtnId = "btn-" + tabId;
+            document.getElementById(targetBtnId).classList.remove('bg-slate-100', 'text-slate-700');
+            document.getElementById(targetBtnId).classList.add('bg-cyan-800', 'text-white');
+            
+            if(tabId === 'tab-entry') syncAdminDropdownHolders();
+            if(tabId === 'tab-pay') loadHoldersToPaymentRoster();
+            if(tabId === 'tab-del') syncDeleteAccountHolders();
+        }
+
+        function renderAlertModalNotification(msg) {
+            document.getElementById('alert-modal-message-body').innerHTML = msg;
+            openWidgetBox('alertNotificationModal');
+        }
+
+        async function calculateGlobalFinancialRevenueDashboard() {
+            let runningPaidSum = 0;
+            let runningDuesSum = 0;
+            try {
+                const snapshot = await getDocs(collection(db, "water_holders"));
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const calculation = evaluateCumulativeOutstandingBalance(data);
+                    runningDuesSum += calculation.netGlobalDues;
+                    
+                    CHRONO_MONTHS.forEach(m => {
+                        if(data.monthlyLedger?.[m]) {
+                            runningPaidSum += data.monthlyLedger[m].totalPaid || 0;
+                        }
+                    });
+                });
+                document.getElementById('dashboard-total-paid').innerText = `₹${Math.round(runningPaidSum)}`;
+                document.getElementById('dashboard-total-dues').innerText = `₹${Math.round(runningDuesSum)}`;
+            } catch(e) {}
+        }
+
+        window.verifyAndUnlockAdminWorkspace = function() {
+            const pin = document.getElementById('admin-pass-key-input').value;
+            if(pin === "2026") {
+                activeAdminAuthorized = true;
+                document.getElementById('admin-pass-key-input').value = "";
+                closeWidgetBox('loginPanelModal');
+                evaluateAuthWorkspaceVisualState();
+                switchAdminFeatureTab('tab-reg');
+                calculateGlobalFinancialRevenueDashboard();
+            } else {
+                alert("Incorrect PIN Code Specified!");
+            }
+        }
+        window.logoutAdminGate = function() {
+            activeAdminAuthorized = false;
+            evaluateAuthWorkspaceVisualState();
+        }
+        function evaluateAuthWorkspaceVisualState() {
+            if(activeAdminAuthorized) {
+                document.getElementById('admin-workspace-panel').classList.remove('hidden');
+                document.getElementById('admin-lock-screen-notice').classList.add('hidden');
+                document.getElementById('lock-toggle-btn').innerText = "🔓 Console Unlocked";
+            } else {
+                document.getElementById('admin-workspace-panel').classList.add('hidden');
+                document.getElementById('admin-lock-screen-notice').classList.remove('hidden');
+                document.getElementById('lock-toggle-btn').innerText = "🔐 Admin Console";
+            }
+        }
+
+        window.processRegisterHolder = async function() {
+            const name = document.getElementById('reg-name').value.trim();
+            const mob = document.getElementById('reg-mobile').value.trim();
+            const yr = document.getElementById('reg-year').value;
+            const addr = document.getElementById('reg-address').value.trim();
+
+            if(!name) { alert("Holder Name is required!"); return; }
+
+            try {
+                const counterDocRef = doc(db, "metadata", "counters");
+                let currentSerial = 1001;
+                const counterSnap = await getDoc(counterDocRef);
+                
+                if(counterSnap.exists()) {
+                    currentSerial = (counterSnap.data().lastWaterSerial || 1000) + 1;
+                }
+                await setDoc(counterDocRef, { lastWaterSerial: currentSerial }, { merge: true });
+
+                const targetUid = `MTR_${yr}_${currentSerial}`;
+                let monthlyLedger = {};
+                CHRONO_MONTHS.forEach(m => {
+                    monthlyLedger[m] = { trips: [], totalBilled: 0, totalPaid: 0, concession: 0 };
+                });
+
+                await setDoc(doc(db, "water_holders", targetUid), {
+                    serialNumber: currentSerial,
+                    accountId: targetUid,
+                    name: name,
+                    mobile: mob || "N/A",
+                    address: addr || "N/A",
+                    year: yr,
+                    monthlyLedger: monthlyLedger,
+                    timestamp: Date.now()
+                });
+
+                renderAlertModalNotification(`Holder <b>${name}</b> Account Generated! ID: ${targetUid}`);
+                document.getElementById('reg-name').value = "";
+                document.getElementById('reg-mobile').value = "";
+                document.getElementById('reg-address').value = "";
+                calculateGlobalFinancialRevenueDashboard();
+            } catch(e) {}
+        }
+
+        window.syncAdminDropdownHolders = async function() {
+            const yr = document.getElementById('entry-year').value;
+            const selectEl = document.getElementById('entry-holder-id');
+            selectEl.innerHTML = "<option value=''>Syncing...</option>";
+            try {
+                const q = query(collection(db, "water_holders"), where("year", "==", yr));
+                const snap = await getDocs(q);
+                selectEl.innerHTML = "<option value=''>-- Choose Account --</option>";
+                snap.forEach(d => {
+                    selectEl.innerHTML += `<option value="${d.id}">${d.data().name} (ID: ${d.data().serialNumber})</option>`;
+                });
+            } catch(e){}
+        }
+
+        window.syncPublicSearchDropdownHolders = async function() {
+            const yr = document.getElementById('search-year').value;
+            const selectEl = document.getElementById('search-holder-id');
+            selectEl.innerHTML = "<option value=''>Loading names...</option>";
+            try {
+                const q = query(collection(db, "water_holders"), where("year", "==", yr));
+                const snap = await getDocs(q);
+                selectEl.innerHTML = "<option value=''>-- Choose Name --</option>";
+                snap.forEach(d => {
+                    selectEl.innerHTML += `<option value="${d.id}">${d.data().name} (ID: ${d.data().serialNumber})</option>`;
+                });
+            } catch(e){}
+        }
+
+        window.syncDeleteAccountHolders = async function() {
+            const yr = document.getElementById('del-year').value;
+            const selectEl = document.getElementById('del-holder-id');
+            selectEl.innerHTML = "<option value=''>Loading names...</option>";
+            try {
+                const q = query(collection(db, "water_holders"), where("year", "==", yr));
+                const snap = await getDocs(q);
+                selectEl.innerHTML = "<option value=''>-- Choose Account --</option>";
+                snap.forEach(d => {
+                    selectEl.innerHTML += `<option value="${d.id}">${d.data().name} (ID: ${d.data().serialNumber})</option>`;
+                });
+            } catch(e){}
+        }
+
+        // REASON-PROTECTED SECURE ACCOUNT DELETION SYSTEM
+        window.processDeleteAccountHolderSecure = async function() {
+            const targetDocId = document.getElementById('del-holder-id').value;
+            const reasonStr = document.getElementById('del-reason').value.trim();
+            const idConfirmStr = document.getElementById('del-holder-id-confirm').value.trim();
+
+            if(!targetDocId) { alert("Pehle delete karne ke liye ek account select karein!"); return; }
+            if(!reasonStr) { alert("Kyun delete karna chahte hain? Kripya reason enter karein!"); return; }
+            if(!idConfirmStr) { alert("Account Holder ID field khali hai!"); return; }
+
+            try {
+                const docRef = doc(db, "water_holders", targetDocId);
+                const snap = await getDoc(docRef);
+                if(!snap.exists()) return;
+                
+                const data = snap.data();
+                let checkObj = evaluateCumulativeOutstandingBalance(data);
+
+                // Validation Rule: Check Dues
+                if(checkObj.netGlobalDues > 0) {
+                    alert(`🚨 Alert: Jab tak iska pura due clear nahin hoga tab tak delete nahin hona chahiye.\nPending Dues: ₹${Math.round(checkObj.netGlobalDues)}`);
+                    return;
+                }
+
+                // Validation Rule: Matching Confirmation ID 
+                if(idConfirmStr !== data.accountId) {
+                    alert(`❌ ID verification failed! Galat Account Holder ID dala gaya hai. Sahi ID enter karein: "${data.accountId}"`);
+                    return;
+                }
+
+                // Execute Permanent Deletion
+                await deleteDoc(docRef);
+                renderAlertModalNotification(`
+                    <span class='text-red-600 font-bold'>Account Profile Successfully Deleted.</span><br>
+                    Reason Logged: ${reasonStr}
+                `);
+
+                // Clear controls
+                document.getElementById('del-reason').value = "";
+                document.getElementById('del-holder-id-confirm').value = "";
+                syncDeleteAccountHolders();
+                calculateGlobalFinancialRevenueDashboard();
+            } catch(e) { alert("Operation failed."); }
+        }
+
+        window.commitUsageTripLog = async function() {
+            const targetUid = document.getElementById('entry-holder-id').value;
+            const month = document.getElementById('entry-month').value;
+            const dateVal = document.getElementById('entry-date').value;
+            let duration = document.getElementById('entry-duration').value.trim();
+            const amount = parseFloat(document.getElementById('entry-amount').value) || 0;
+
+            if(!targetUid || !dateVal || !duration || amount <= 0) { alert("Sahi Details bharein."); return; }
+            if(!isNaN(duration)) duration = duration + " Hours";
+
+            try {
+                const docRef = doc(db, "water_holders", targetUid);
+                const snap = await getDoc(docRef);
+                if(!snap.exists()) return;
+
+                let data = snap.data();
+                let parts = dateVal.split('-'); 
+                let parsedDate = parts.length === 3 ? new Date(parts[0], parts[1] - 1, parts[2]) : new Date(dateVal);
+                let dayName = MASTER_DAYS[parsedDate.getDay()] || "Day";
+                
+                let cleanFormattedDate = `${String(parsedDate.getDate()).padStart(2, '0')}/${String(parsedDate.getMonth() + 1).padStart(2, '0')}/${data.year}`;
+
+                let singleTripNode = {
+                    date: cleanFormattedDate,
+                    day: dayName,
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    duration: duration,
+                    amount: amount,
+                    loggedAtTimestamp: Date.now()
+                };
+
+                if(!data.monthlyLedger) data.monthlyLedger = {};
+                if(!data.monthlyLedger[month]) data.monthlyLedger[month] = { trips: [], totalBilled: 0, totalPaid: 0, concession: 0 };
+
+                data.monthlyLedger[month].trips.push(singleTripNode);
+                
+                let sumBilled = 0;
+                data.monthlyLedger[month].trips.forEach(t => sumBilled += t.amount);
+                data.monthlyLedger[month].totalBilled = sumBilled;
+
+                await updateDoc(docRef, { monthlyLedger: data.monthlyLedger });
+                renderAlertModalNotification(`Trip Logged under ${month} for ₹${amount}`);
+                document.getElementById('entry-duration').value = "";
+                document.getElementById('entry-amount').value = "";
+                calculateGlobalFinancialRevenueDashboard();
+            } catch(e){}
+        }
+
+        window.loadHoldersToPaymentRoster = async function() {
+            const yr = document.getElementById('pay-filter-year').value;
+            const targetDiv = document.getElementById('payment-roster-target');
+            targetDiv.innerHTML = "Processing...";
+            try {
+                const q = query(collection(db, "water_holders"), where("year", "==", yr));
+                const snap = await getDocs(q);
+                if(snap.empty) { targetDiv.innerHTML = "No Records."; return; }
+                targetDiv.innerHTML = "";
+                
+                snap.forEach(d => {
+                    const h = d.data();
+                    let dues = evaluateCumulativeOutstandingBalance(h).netGlobalDues;
+                    const rowBtn = document.createElement('button');
+                    rowBtn.className = "w-full text-left p-2 rounded-lg bg-white mb-1 border flex justify-between items-center text-xs font-bold cursor-pointer hover:bg-cyan-50/50";
+                    rowBtn.innerHTML = `<div><p class='text-slate-900 font-black'>${h.name}</p></div><span class='px-1.5 py-0.5 rounded text-[11px] font-mono ${dues > 0 ? "text-rose-600 font-black" : "text-emerald-600"}'>₹${dues}</span>`;
+                    rowBtn.onclick = () => activatePaymentDeskDrawerForHolder(d.id, h);
+                    targetDiv.appendChild(rowBtn);
+                });
+            } catch(e){}
+        }
+
+        function evaluateCumulativeOutstandingBalance(holderData) {
+            let runningCarryForwardDues = 0;
+            let structuredMonthArray = [];
+
+            CHRONO_MONTHS.forEach(m => {
+                let monthRecord = holderData.monthlyLedger?.[m] || { trips: [], totalBilled: 0, totalPaid: 0, concession: 0 };
+                let currentMonthIsolatedGross = monthRecord.totalBilled + runningCarryForwardDues;
+                let currentMonthNetDues = currentMonthIsolatedGross - (monthRecord.totalPaid + monthRecord.concession);
+                
+                structuredMonthArray.push({
+                    month: m,
+                    trips: monthRecord.trips || [],
+                    openingBroughtForward: runningCarryForwardDues,
+                    currentMonthBilled: monthRecord.totalBilled,
+                    aggregatedGrossTarget: currentMonthIsolatedGross,
+                    paid: monthRecord.totalPaid,
+                    concession: monthRecord.concession,
+                    finalClosingDues: currentMonthNetDues
+                });
+                runningCarryForwardDues = Math.max(0, currentMonthNetDues);
+            });
+
+            return { netGlobalDues: runningCarryForwardDues, monthSegments: structuredMonthArray };
+        }
+
+        function activatePaymentDeskDrawerForHolder(id, data) {
+            activeDeskHolderId = id;
+            activeDeskHolderData = data;
+            document.getElementById('desk-holder-name').innerText = data.name;
+            document.getElementById('desk-holder-meta').innerText = `ID Ref: ${data.accountId}`;
+
+            const rowsContainer = document.getElementById('desk-statement-rows');
+            rowsContainer.innerHTML = "";
+            let analytics = evaluateCumulativeOutstandingBalance(data);
+            
+            analytics.monthSegments.forEach(seg => {
+                if(seg.currentMonthBilled > 0 || seg.paid > 0) {
+                    rowsContainer.innerHTML += `
+                        <tr class="bg-white text-[11px]">
+                            <td class="p-2 font-semibold">📅 <span class="font-black text-sm">${seg.month}</span></td>
+                            <td class="p-2 text-right font-mono">₹${Math.round(seg.currentMonthBilled)}</td>
+                            <td class="p-2 text-right text-emerald-700 font-mono">₹${Math.round(seg.paid)}</td>
+                            <td class="p-2 text-right pr-2 font-mono text-rose-600 font-bold">₹${Math.round(seg.finalClosingDues)}</td>
+                        </tr>
+                    `;
+                }
+            });
+
+            document.getElementById('cash-gross-due').value = analytics.netGlobalDues;
+            document.getElementById('cash-concession').value = 0;
+            document.getElementById('cash-intake-amount').value = analytics.netGlobalDues;
+            document.getElementById('payment-billing-desk-drawer').classList.remove('hidden');
+        }
+
+        window.calculateLiveCashIntake = function() {
+            let gross = parseFloat(document.getElementById('cash-gross-due').value) || 0;
+            let concession = parseFloat(document.getElementById('cash-concession').value) || 0;
+            document.getElementById('cash-intake-amount').value = Math.max(0, gross - concession);
+        }
+
+        window.processFinalizeBillPayment = async function() {
+            if(!activeDeskHolderId) return;
+            const concession = parseFloat(document.getElementById('cash-concession').value) || 0;
+            const netPaid = parseFloat(document.getElementById('cash-intake-amount').value) || 0;
+            if((concession + netPaid) <= 0) { alert("No Dues!"); return; }
+
+            try {
+                const docRef = doc(db, "water_holders", activeDeskHolderId);
+                let ledger = { ...activeDeskHolderData.monthlyLedger };
+                let remainingLiquidationAmount = concession + netPaid;
+                let runningBalanceDuesCheck = 0;
+
+                for(let i = 0; i < CHRONO_MONTHS.length; i++) {
+                    let m = CHRONO_MONTHS[i];
+                    if(!ledger[m]) ledger[m] = { trips: [], totalBilled: 0, totalPaid: 0, concession: 0 };
+                    let monthDeficit = Math.max(0, (ledger[m].totalBilled + runningBalanceDuesCheck) - (ledger[m].totalPaid + ledger[m].concession));
+
+                    if(monthDeficit > 0 && remainingLiquidationAmount > 0) {
+                        let dynamicAllotment = Math.min(monthDeficit, remainingLiquidationAmount);
+                        let ratio = dynamicAllotment / (concession + netPaid);
+                        ledger[m].totalPaid += netPaid * ratio;
+                        ledger[m].concession += concession * ratio;
+                        remainingLiquidationAmount -= dynamicAllotment;
+                    }
+                    runningBalanceDuesCheck = Math.max(0, (ledger[m].totalBilled + runningBalanceDuesCheck) - (ledger[m].totalPaid + ledger[m].concession));
+                }
+
+                await updateDoc(docRef, { monthlyLedger: ledger });
+                const freshSnap = await getDoc(docRef);
+                if(freshSnap.exists()) activatePaymentDeskDrawerForHolder(activeDeskHolderId, freshSnap.data());
+                loadHoldersToPaymentRoster();
+                calculateGlobalFinancialRevenueDashboard();
+                renderAlertModalNotification("Payment Logged Successfully!");
+            } catch(e){}
+        }
+
+        // ================= DYNAMIC VISUAL SEARCH MATRIX LOGIC (1 MONTH / 4 MONTH SYSTEM) =================
+        window.executePublicStatementSearch = async function() {
+            const targetDocId = document.getElementById('search-holder-id').value;
+            const outBox = document.getElementById('search-output-viewport');
+
+            if(!targetDocId) { alert("Please select a name first!"); return; }
+
+            outBox.innerHTML = "<div class='text-center text-xs py-4'>Matrix Loading...</div>";
+            outBox.classList.remove('hidden');
+
+            try {
+                const docRef = doc(db, "water_holders", targetDocId);
+                const snap = await getDoc(docRef);
+                if(!snap.exists()) { outBox.innerHTML = "No record found."; return; }
+
+                const h = snap.data();
+                let analytics = evaluateCumulativeOutstandingBalance(h);
+                
+                // FILTERING TIME WINDOW MATRIX CALCULATION
+                let targetSegmentsToRender = [];
+
+                if(currentTimelineFilterRange === "single") {
+                    let chosenMonth = document.getElementById('search-filter-isolated-month').value;
+                    let matchedSeg = analytics.monthSegments.find(x => x.month === chosenMonth);
+                    if(matchedSeg) targetSegmentsToRender.push(matchedSeg);
+                } 
+                else if(currentTimelineFilterRange === "quad") {
+                    // Pull last 4 active populated sequence array
+                    let populated = analytics.monthSegments.filter(x => x.currentMonthBilled > 0 || x.paid > 0);
+                    if(populated.length > 0) {
+                        targetSegmentsToRender = populated.slice(-4);
+                    } else {
+                        targetSegmentsToRender = analytics.monthSegments.slice(-4); // fallback last 4 elements
+                    }
+                } 
+                else {
+                    // Default view all months with logs
+                    targetSegmentsToRender = analytics.monthSegments.filter(x => x.currentMonthBilled > 0 || x.paid > 0);
+                    if(targetSegmentsToRender.length === 0) targetSegmentsToRender = analytics.monthSegments;
+                }
+
+                let monthlyMatrixRows = "";
+                targetSegmentsToRender.forEach(seg => {
+                    let statusBadge = (seg.finalClosingDues <= 0) 
+                        ? `<span class="bg-emerald-100 text-emerald-800 text-[10px] font-black px-1.5 py-0.5 rounded">Paid ✅</span>`
+                        : `<span class="bg-rose-100 text-rose-800 text-[10px] font-black px-1.5 py-0.5 rounded">Pending</span><div class="text-xs font-mono font-black text-rose-600 mt-0.5">₹${Math.round(seg.finalClosingDues)}</div>`;
+
+                    monthlyMatrixRows += `
+                        <tr class="border-b text-slate-700 bg-white text-xs">
+                            <td class="p-2 font-black text-slate-900">${seg.month}
+                                <span class="block text-[9px] font-bold text-purple-600">Prev: ₹${Math.round(seg.openingBroughtForward)}</span>
+                            </td>
+                            <td class="p-2 text-right font-mono">₹${Math.round(seg.currentMonthBilled)}</td>
+                            <td class="p-2 text-right text-emerald-700 font-mono">₹${Math.round(seg.paid)}</td>
+                            <td class="p-2 text-right pr-2">${statusBadge}</td>
+                        </tr>
+                    `;
+                });
+
+                // PAYMENT HISTORY EXPANDABLE BREAKDOWN DRAWER NODE GENERATOR
+                let transactionHistoryItems = "";
+                let itemIndex = 1;
+                targetSegmentsToRender.forEach(seg => {
+                    if(seg.trips && seg.trips.length > 0) {
+                        seg.trips.forEach(t => {
+                            transactionHistoryItems += `
+                                <div class="p-2 bg-slate-50 border rounded-md text-[11px] flex justify-between items-center">
+                                    <div>
+                                        <span class="font-black text-slate-800">${itemIndex++}. ${seg.month} Log</span>
+                                        <span class="block text-[9px] text-slate-400">${t.date} (${t.day})</span>
+                                    </div>
+                                    <div class="text-right font-mono"><b>₹${Math.round(t.amount)}</b></div>
+                                </div>
+                            `;
+                        });
+                    }
+                });
+
+                outBox.innerHTML = `
+                    <div class="p-3 bg-white rounded-xl border space-y-3 text-left">
+                        <div>
+                            <h4 class="font-black text-xs text-slate-900">👤 Holder: ${h.name}</h4>
+                            <p class="text-[9px] text-slate-400 font-mono">UID: ${h.accountId}</p>
+                            <span class="inline-block mt-1 text-[9px] bg-slate-200 text-slate-800 font-bold px-2 py-0.5 rounded uppercase tracking-wider">Mode: ${currentTimelineFilterRange.toUpperCase()} View</span>
+                        </div>
+                        <div class="overflow-x-auto rounded-lg border">
+                            <table class="w-full text-left text-xs min-w-[300px]">
+                                <thead class="bg-slate-800 text-white text-[9px] uppercase">
+                                    <tr><th class="p-2">Month</th><th class="p-2 text-right">Bill</th><th class="p-2 text-right">Paid</th><th class="p-2 text-right pr-2">Status</th></tr>
+                                </thead>
+                                <tbody>${monthlyMatrixRows}</tbody>
+                            </table>
+                        </div>
+                        <div class="p-2.5 bg-slate-900 text-white rounded-lg text-xs font-black text-center font-mono">
+                            ACCUMULATED OUTSTANDING DUE: ₹${Math.round(analytics.netGlobalDues)}
+                        </div>
+                        <div class="border-t pt-2">
+                            <button onclick="document.getElementById('popup-history-drawer').classList.toggle('hidden')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-black py-2 rounded-lg text-[11px] text-center border cursor-pointer">
+                                📜 Furniture View Payment History (Show/Hide)
+                            </button>
+                            <div id="popup-history-drawer" class="hidden mt-2 space-y-1 max-h-40 overflow-y-auto">
+                                ${transactionHistoryItems || '<div class="text-[10px] text-slate-400 italic text-center py-2">No individual logs for this range.</div>'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } catch(e){ outBox.innerHTML = "Error parsing matrices."; }
+        }
+    </script>
+</body>
+</html>
