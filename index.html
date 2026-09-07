@@ -18,7 +18,31 @@
             align-items: center; justify-content: center;
             padding: 12px;
         }
-        /* FIXED ROSTER HEIGHTS TO REMOVE SCROLL ISSUES */
+        
+        .full-screen-modal-content {
+            width: 100% !important;
+            max-width: 95vw !important;
+            height: auto;
+            max-height: 92vh !important;
+            overflow-y: auto;
+        }
+
+        @media (min-width: 768px) {
+            .full-screen-modal-content {
+                max-width: 85vw !important;
+            }
+            select, input, button, table, div {
+                font-size: 14px !important;
+            }
+            .desktop-large-title {
+                font-size: 18px !important;
+            }
+            .desktop-large-label {
+                font-size: 12px !important;
+                letter-spacing: 0.05em;
+            }
+        }
+
         .roster-modal-viewport {
             width: 100vw !important;
             height: 100vh !important;
@@ -28,12 +52,7 @@
             margin: 0 !important;
             border-radius: 0 !important;
         }
-        .scrollable-roster-pane {
-            max-height: calc(100vh - 70px);
-            max-height: calc(100dvh - 70px);
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
+        
         .thermal-receipt {
             width: 100%;
             max-width: 7.5cm;
@@ -48,13 +67,20 @@
             border-radius: 4px;
             text-align: left;
         }
+        @media (min-width: 768px) {
+            .thermal-receipt {
+                max-width: 9cm;
+                font-size: 13px;
+                padding: 20px;
+            }
+        }
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.98); }
             to { opacity: 1; transform: scale(1); }
         }
         .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
         @media print {
-            header, .admin-workspace, .system-gateways, .modal-blur-bg:not(#receiptPopupModal), .tab-navigation-bar, .no-print, #adminPaymentConsoleModal {
+            header, .admin-workspace, .system-gateways, .modal-blur-bg:not(#receiptPopupModal), .tab-navigation-bar, .no-print {
                 display: none !important;
             }
             #receiptPopupModal {
@@ -65,210 +91,425 @@
             }
             .thermal-receipt { border: none !important; margin: 0 !important; width: 7.5cm !important; }
         }
+
+        /* --- Welcome Back Cyberpunk Theme Login Panel Custom Styles --- */
+        .neon-login-card {
+            background-color: #161d24 !important;
+            width: 100%;
+            max-width: 360px;
+            padding: 35px 25px;
+            border-radius: 24px !important;
+            border: 2px solid #3fa74d !important;
+            box-shadow: 0 0 25px rgba(63, 167, 77, 0.45);
+            text-align: center;
+            position: relative;
+        }
+        .neon-login-card h2 {
+            color: #ffffff !important;
+            font-size: 26px !important;
+            font-weight: 700 !important;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+        .neon-input-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .neon-input-group label {
+            display: block;
+            color: #8fa0a6 !important;
+            font-size: 13px !important;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .neon-input-group input {
+            width: 100%;
+            padding: 12px 14px;
+            background-color: #1e262f !important;
+            border: 1px solid #2d3846 !important;
+            border-radius: 12px !important;
+            color: #ffffff !important;
+            font-size: 14px !important;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .neon-input-group input::placeholder {
+            color: #556575;
+        }
+        .neon-input-group input:focus {
+            border-color: #4cd163 !important;
+            box-shadow: 0 0 8px rgba(76, 209, 99, 0.3);
+        }
+        .neon-login-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #3fa74d !important;
+            color: #ffffff !important;
+            border: none !important;
+            border-radius: 14px !important;
+            font-size: 15px !important;
+            font-weight: 600 !important;
+            cursor: pointer;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        .neon-login-btn:hover {
+            background-color: #4cd163 !important;
+            box-shadow: 0 0 15px rgba(76, 209, 99, 0.4);
+        }
     </style>
 </head>
 <body class="bg-slate-100 font-sans min-h-screen text-slate-900 antialiased">
 
     <header class="bg-gradient-to-r from-cyan-950 to-blue-900 text-white py-5 px-4 shadow-md text-center">
-        <h1 class="text-2xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-emerald-200">AQUAFLOW MOTOR BILLING SYSTEM</h1>
-        <p class="text-[10px] font-bold tracking-widest uppercase text-cyan-200 mt-1">💧 Industrial Water Supply Logistics & Ledger</p>
+        <h1 class="text-2xl md:text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-emerald-200">AQUAFLOW MOTOR WATER BILLING SYSTEM</h1>
+        <p class="text-[10px] md:text-xs font-bold tracking-widest uppercase text-cyan-200 mt-1">💧 Industrial Water Supply Logistics & Ledger</p>
         
-        <div class="mt-4 flex justify-center gap-2 max-w-sm mx-auto system-gateways">
-            <button onclick="openCustomerSearchWidget()" class="flex-1 bg-cyan-400 hover:bg-cyan-500 text-cyan-950 font-black py-2.5 px-3 rounded-xl shadow text-xs cursor-pointer transition-all">
+        <div class="mt-4 flex flex-col sm:flex-row justify-center gap-2 max-w-md mx-auto system-gateways px-2">
+            <button onclick="openCustomerSearchWidget()" class="flex-1 bg-cyan-400 hover:bg-cyan-50 text-cyan-950 font-black py-2.5 px-3 rounded-xl shadow text-xs md:text-sm cursor-pointer transition-all">
                 🚰 Check Your Bill Popup (बिल देखें)
             </button>
-            <button id="lock-toggle-btn" onclick="openWidgetBox('loginPanelModal')" class="bg-white/10 hover:bg-white/20 text-white font-bold py-2.5 px-3 rounded-xl text-xs cursor-pointer transition-all border border-white/10">
+            <button id="lock-toggle-btn" onclick="openWidgetBox('loginPanelModal')" class="bg-white/10 hover:bg-white/20 text-white font-bold py-2.5 px-3 rounded-xl text-xs md:text-sm cursor-pointer transition-all border border-white/10">
                 🔐 Admin Console
             </button>
         </div>
     </header>
 
     <div id="admin-workspace-panel" class="hidden admin-workspace">
-        <div class="bg-cyan-700 text-white p-2 text-center text-[11px] font-bold flex justify-center items-center gap-3 shadow-inner">
+        <div class="bg-cyan-700 text-white p-2 text-center text-[11px] md:text-sm font-bold flex justify-center items-center gap-3 shadow-inner">
             <span>🔓 AquaFlow Central Engine Is Operational</span>
-            <button onclick="logoutAdminGate()" class="bg-slate-950 hover:bg-red-700 text-white text-[10px] px-2.5 py-1 rounded-md font-bold transition-colors">Lock System</button>
+            <button onclick="logoutAdminGate()" class="bg-slate-950 hover:bg-red-700 text-white text-[10px] md:text-xs px-2.5 py-1 rounded-md font-bold transition-colors">Lock System</button>
         </div>
 
-        <div class="max-w-2xl mx-auto px-4 mt-4 grid grid-cols-2 gap-3">
+        <div class="max-w-4xl mx-auto px-4 mt-4 grid grid-cols-2 gap-3">
             <div class="bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-3 rounded-xl shadow-sm border border-emerald-400 text-center">
-                <span class="block text-[10px] font-bold uppercase tracking-wider opacity-90">💰 Total Paid Revenue</span>
-                <span id="dashboard-total-paid" class="text-xl font-black tracking-tight font-mono">₹0</span>
+                <span class="block text-[10px] md:text-xs font-bold uppercase tracking-wider opacity-90">💰 Total Paid Revenue</span>
+                <span id="dashboard-total-paid" class="text-xl md:text-2xl font-black tracking-tight font-mono">₹0</span>
             </div>
             <div class="bg-gradient-to-br from-rose-500 to-red-600 text-white p-3 rounded-xl shadow-sm border border-rose-400 text-center">
-                <span class="block text-[10px] font-bold uppercase tracking-wider opacity-90">🚨 Total System Dues</span>
-                <span id="dashboard-total-dues" class="text-xl font-black tracking-tight font-mono">₹0</span>
+                <span class="block text-[10px] md:text-xs font-bold uppercase tracking-wider opacity-90">🚨 Total System Dues</span>
+                <span id="dashboard-total-dues" class="text-xl md:text-2xl font-black tracking-tight font-mono">₹0</span>
             </div>
         </div>
         
-        <div class="max-w-md mx-auto px-2 mt-4 tab-navigation-bar">
+        <div class="max-w-xl mx-auto px-2 mt-4 tab-navigation-bar">
             <div class="flex flex-col gap-1.5 bg-slate-200/80 p-1.5 rounded-xl border border-slate-300 shadow-sm">
-                <button onclick="openWidgetBox('adminAddHolderModal')" class="w-full bg-white hover:bg-cyan-50 text-slate-800 font-black py-2.5 px-3 rounded-lg text-xs text-left pl-4 border shadow-sm transition-all">
-                    👤 1. Add New Account Holder Popup
+                <button onclick="openWidgetBox('adminAddHolderModal')" class="w-full bg-white hover:bg-cyan-50 text-slate-800 font-black py-2.5 px-3 rounded-lg text-xs md:text-sm text-left pl-4 border shadow-sm transition-all">
+                    👤 1. Add New Account Holder Profile
                 </button>
-                <button onclick="openTripEntryModalPopup()" class="w-full bg-white hover:bg-blue-50 text-slate-800 font-black py-2.5 px-3 rounded-lg text-xs text-left pl-4 border shadow-sm transition-all">
+                <button onclick="openTripEntryModalPopup()" class="w-full bg-white hover:bg-blue-50 text-slate-800 font-black py-2.5 px-3 rounded-lg text-xs md:text-sm text-left pl-4 border shadow-sm transition-all">
                     ⚡ 2. Log Water Usage (Trip Entry Popup)
                 </button>
-                <button onclick="openPaymentGatewayPopupModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-3 rounded-lg text-xs text-left pl-4 shadow-sm transition-all">
-                    💳 3. Collect Payments & Full-Screen Roster Matrix Popup ✨
+                <button onclick="openEditProfileModalPopup()" class="w-full bg-white hover:bg-amber-50 text-amber-700 font-black py-2.5 px-3 rounded-lg text-xs md:text-sm text-left pl-4 border shadow-sm transition-all">
+                    ✏️ 3. Edit Account Holder Profile (प्रोफाइल सुधारें)
                 </button>
-                <button onclick="openDeleteAccountModalPopup()" class="w-full bg-white hover:bg-rose-50 text-rose-600 font-black py-2.5 px-3 rounded-lg text-xs text-left pl-4 border shadow-sm transition-all">
-                    🗑️ 4. Delete Account Holder Popup
+                <button onclick="openEditTransactionModalPopup()" class="w-full bg-white hover:bg-purple-50 text-purple-700 font-black py-2.5 px-3 rounded-lg text-xs md:text-sm text-left pl-4 border shadow-sm transition-all">
+                    ⚙️ 4. Edit Trip / Transaction (एंट्री बदलें)
+                </button>
+                <button onclick="openPaymentGatewayPopupModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 px-3 rounded-lg text-xs md:text-sm text-left pl-4 shadow-md transition-all">
+                    💳 5. Collect Payments & Roster Matrix Workspace 🌟
+                </button>
+                <button onclick="openDeleteAccountModalPopup()" class="w-full bg-white hover:bg-rose-50 text-rose-600 font-black py-2.5 px-3 rounded-lg text-xs md:text-sm text-left pl-4 border shadow-sm transition-all">
+                    🗑️ 6. Delete Account Holder Popup
+                </button>
+                <button onclick="openDraftManagerModalPopup()" class="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-black py-2.5 px-3 rounded-lg text-xs md:text-sm text-left pl-4 shadow-sm transition-all">
+                    📁 7. Draft Entries List Manager (अधूरी एंट्री सूची)
+                </button>
+                <button onclick="openPaidSummaryModalPopup()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-2.5 px-3 rounded-lg text-xs md:text-sm text-left pl-4 shadow-sm transition-all">
+                    📊 8. Paid Summary & Ledger History (भुगतान इतिहास)
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="admin-lock-screen-notice" class="max-w-md mx-auto my-10 bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200 animate-fade-in">
+    <div id="admin-lock-screen-notice" class="max-w-md mx-auto my-10 bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200 animate-fade-in mx-4 md:mx-auto">
         <div class="bg-gradient-to-r from-blue-700 via-indigo-700 to-slate-900 text-white p-5 text-center">
             <div class="mx-auto w-12 h-12 bg-white/10 rounded-full flex items-center justify-center border border-white/20 mb-2 shadow-inner">
                 <span class="text-xl">💧</span>
             </div>
-            <h3 class="text-base font-black tracking-wide">Digital Water Supply Portal</h3>
-            <p class="text-[10px] text-indigo-200 mt-0.5">Shekhpur Daud, Azamgarh</p>
+            <h3 class="text-base md:text-lg font-black tracking-wide">Digital Water Supply Portal</h3>
+            <p class="text-[10px] md:text-xs text-indigo-200 mt-0.5">Shekhpur Daud, Azamgarh</p>
         </div>
-        <div class="p-5 text-slate-700 text-xs leading-relaxed space-y-3">
-            <div class="flex items-center gap-2 text-indigo-950 font-black text-sm border-b pb-1">
+        <div class="p-5 text-slate-700 text-xs md:text-sm leading-relaxed space-y-3">
+            <div class="flex items-center gap-2 text-indigo-950 font-black text-sm md:text-base border-b pb-1">
                 <span>📢</span> Portal Ki Information
             </div>
             <p>Is digital portal ke madhyam se aap apne <b>Water Tanker / Paani Connection</b> ki monthly report aur bill dues live dekh sakte hain.</p>
-            <button onclick="openCustomerSearchWidget()" class="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-black py-3 rounded-xl text-xs tracking-wide shadow-md transition-all cursor-pointer text-center">
+            <button onclick="openCustomerSearchWidget()" class="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-black py-3 rounded-xl text-xs md:text-sm tracking-wide shadow-md transition-all cursor-pointer text-center">
                 🔍 Apna Bill Check Karein (Click Here)
             </button>
         </div>
     </div>
 
     <div id="adminAddHolderModal" class="modal-blur-bg">
-        <div class="bg-white p-5 rounded-xl shadow-2xl max-w-md w-full relative border animate-fade-in">
+        <div class="bg-white p-5 rounded-xl shadow-2xl full-screen-modal-content relative border animate-fade-in">
             <button onclick="closeWidgetBox('adminAddHolderModal')" class="absolute top-2 right-3 font-black text-xl text-slate-400 hover:text-slate-600">&times;</button>
-            <h2 class="text-xs font-black text-cyan-950 uppercase tracking-wider border-b pb-2 mb-3">👤 Create New Account Holder Profile</h2>
+            <h2 class="text-xs md:text-sm font-black text-cyan-950 uppercase tracking-wider border-b pb-2 mb-3 desktop-large-title">👤 Create New Account Holder Profile</h2>
             <div class="space-y-3">
                 <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Holder Full Name *</label>
-                    <input type="text" id="reg-name" placeholder="Enter Full Name" class="w-full p-2 border rounded-lg text-xs font-bold bg-slate-50">
+                    <label class="block text-[10px] md:text-xs font-bold uppercase text-slate-400 mb-1 desktop-large-label">Holder Full Name *</label>
+                    <input type="text" id="reg-name" placeholder="Enter Full Name" class="w-full p-2 border rounded-lg text-xs md:text-sm font-bold bg-slate-50">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Mobile (Optional)</label>
-                    <input type="text" id="reg-mobile" placeholder="Mobile Number" class="w-full p-2 border rounded-lg text-xs bg-slate-50">
+                    <label class="block text-[10px] md:text-xs font-bold uppercase text-slate-400 mb-1 desktop-large-label">Mobile (Optional)</label>
+                    <input type="text" id="reg-mobile" placeholder="Mobile Number" class="w-full p-2 border rounded-lg text-xs md:text-sm bg-slate-50">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Address (Optional)</label>
-                    <input type="text" id="reg-address" placeholder="Village / Area Address" class="w-full p-2 border rounded-lg text-xs bg-slate-50">
+                    <label class="block text-[10px] md:text-xs font-bold uppercase text-slate-400 mb-1 desktop-large-label">Address (Optional)</label>
+                    <input type="text" id="reg-address" placeholder="Village / Area Address" class="w-full p-2 border rounded-lg text-xs md:text-sm bg-slate-50">
                 </div>
-                <button onclick="processRegisterHolder()" class="w-full bg-cyan-700 hover:bg-cyan-800 text-white font-black py-3 rounded-lg text-xs shadow cursor-pointer mt-1">
+                <button onclick="processRegisterHolder()" class="w-full bg-cyan-700 hover:bg-cyan-800 text-white font-black py-3 rounded-lg text-xs md:text-sm shadow cursor-pointer mt-1">
                     🚀 Generate Holder Account
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="adminTripEntryModal" class="modal-blur-bg">
-        <div class="bg-white p-5 rounded-xl shadow-2xl max-w-md w-full relative border animate-fade-in">
-            <button onclick="closeWidgetBox('adminTripEntryModal')" class="absolute top-2 right-3 font-black text-xl text-slate-400 hover:text-slate-600">&times;</button>
-            <h2 class="text-xs font-black text-cyan-950 uppercase tracking-wider border-b pb-2 mb-3">⚡ Log Water Usage / Add Bill Entry</h2>
+    <div id="adminEditProfileModal" class="modal-blur-bg">
+        <div class="bg-white p-5 rounded-xl shadow-2xl full-screen-modal-content relative border animate-fade-in">
+            <button onclick="closeWidgetBox('adminEditProfileModal')" class="absolute top-2 right-3 font-black text-xl text-slate-400 hover:text-slate-600">&times;</button>
+            <h2 class="text-xs md:text-sm font-black text-amber-950 uppercase tracking-wider border-b pb-2 mb-3 desktop-large-title">✏️ Edit Account Holder Profile</h2>
             <div class="space-y-3">
                 <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Billing Month</label>
-                    <select id="entry-month" class="w-full p-2 border rounded-lg bg-slate-50 text-xs font-bold">
+                    <label class="block text-[10px] md:text-xs font-bold uppercase text-slate-400 mb-1 desktop-large-label">Select Account Holder</label>
+                    <select id="edit-profile-holder-id" onchange="fetchHolderDetailsForEdit()" class="w-full p-2 border border-amber-300 rounded-lg bg-amber-50 text-xs md:text-sm font-black text-amber-950">
+                        <option value="">-- Choose Account --</option>
+                    </select>
+                </div>
+                <div id="edit-profile-fields" class="hidden space-y-3">
+                    <div>
+                        <label class="block text-[10px] md:text-xs font-bold uppercase text-slate-400 mb-1 desktop-large-label">Holder Full Name *</label>
+                        <input type="text" id="edit-reg-name" class="w-full p-2 border rounded-lg text-xs md:text-sm font-bold bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] md:text-xs font-bold uppercase text-slate-400 mb-1 desktop-large-label">Mobile</label>
+                        <input type="text" id="edit-reg-mobile" class="w-full p-2 border rounded-lg text-xs md:text-sm bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] md:text-xs font-bold uppercase text-slate-400 mb-1 desktop-large-label">Address</label>
+                        <input type="text" id="edit-reg-address" class="w-full p-2 border rounded-lg text-xs md:text-sm bg-slate-50">
+                    </div>
+                    <button onclick="processUpdateHolderProfile()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-black py-3 rounded-lg text-xs md:text-sm shadow cursor-pointer mt-1">
+                        💾 Update Profile Details
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminTripEntryModal" class="modal-blur-bg">
+        <div class="bg-white p-5 rounded-xl shadow-2xl full-screen-modal-content relative border animate-fade-in">
+            <button onclick="closeWidgetBox('adminTripEntryModal')" class="absolute top-2 right-3 font-black text-xl text-slate-400 hover:text-slate-600">&times;</button>
+            <h2 class="text-xs md:text-sm font-black text-cyan-950 uppercase tracking-wider border-b pb-2 mb-3 desktop-large-title">⚡ Log Water Usage / Add Bill Entry</h2>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-[10px] md:text-xs font-bold uppercase text-slate-400 mb-1 desktop-large-label">Billing Month</label>
+                    <select id="entry-month" class="w-full p-2 border rounded-lg bg-slate-50 text-xs md:text-sm font-bold">
                         <option value="January">January</option><option value="February">February</option><option value="March">March</option><option value="April">April</option><option value="May">May</option><option value="June">June</option><option value="July">July</option><option value="August">August</option><option value="September">September</option><option value="October">October</option><option value="November">November</option><option value="December">December</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Select Account Holder</label>
-                    <select id="entry-holder-id" class="w-full p-2 border border-cyan-300 rounded-lg bg-cyan-50 text-xs font-black text-cyan-950">
+                    <label class="block text-[10px] md:text-xs font-bold uppercase text-slate-400 mb-1 desktop-large-label">Select Account Holder</label>
+                    <select id="entry-holder-id" onchange="showLiveDuesInTripModal()" class="w-full p-2 border border-cyan-300 rounded-lg bg-cyan-50 text-xs md:text-sm font-black text-cyan-950">
                         <option value="">-- Choose Account --</option>
                     </select>
+                </div>
+                <div id="trip-modal-dues-box" class="hidden p-2.5 bg-rose-50 border border-rose-200 text-rose-700 font-bold text-xs md:text-sm rounded-lg">
+                    📊 Current Outstanding Dues: <span id="trip-modal-live-dues" class="font-mono font-black text-sm md:text-base">₹0</span>
                 </div>
                 <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-2">
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block text-[9px] font-bold text-slate-400 uppercase">Date</label>
-                            <input type="date" id="entry-date" class="w-full p-1.5 border rounded-md text-xs bg-white">
+                            <label class="block text-[9px] md:text-xs font-bold text-slate-400 uppercase">Date</label>
+                            <input type="date" id="entry-date" class="w-full p-1.5 border rounded-md text-xs md:text-sm bg-white">
                         </div>
                         <div>
-                            <label class="block text-[9px] font-bold text-slate-400 uppercase">Duration</label>
-                            <input type="text" id="entry-duration" placeholder="e.g. 2 Hours" class="w-full p-1.5 border rounded-md text-xs bg-white">
+                            <label class="block text-[9px] md:text-xs font-bold text-slate-400 uppercase">Duration</label>
+                            <input type="text" id="entry-duration" placeholder="e.g. 2 Hours" class="w-full p-1.5 border rounded-md text-xs md:text-sm bg-white">
                         </div>
                     </div>
                     <div>
-                        <label class="block text-[9px] font-bold text-slate-400 uppercase">Amount (₹)</label>
-                        <input type="number" id="entry-amount" placeholder="₹ Amount" class="w-full p-2 border rounded-md text-xs font-black bg-white">
+                        <label class="block text-[9px] md:text-xs font-bold text-slate-400 uppercase">Amount (₹)</label>
+                        <input type="number" id="entry-amount" placeholder="₹ Amount" class="w-full p-2 border rounded-md text-xs md:text-sm font-black bg-white">
                     </div>
                 </div>
-                <button onclick="commitUsageTripLog()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-3 rounded-lg text-xs shadow cursor-pointer">
-                    ➕ Add This Trip Entry
-                </button>
+                <div class="flex gap-2">
+                    <button onclick="commitUsageTripLog(false)" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-black py-3 rounded-lg text-xs md:text-sm shadow cursor-pointer">
+                        ➕ Add This Trip Entry
+                    </button>
+                    <button onclick="commitUsageTripLog(true)" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white font-black py-3 rounded-lg text-xs md:text-sm shadow cursor-pointer">
+                        📝 Save as Draft
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminDraftManagerModal" class="modal-blur-bg">
+        <div class="bg-white p-5 rounded-xl shadow-2xl full-screen-modal-content relative border animate-fade-in">
+            <button onclick="closeWidgetBox('adminDraftManagerModal')" class="absolute top-2 right-3 font-black text-xl text-slate-400 hover:text-slate-600">&times;</button>
+            <h2 class="text-xs md:text-sm font-black text-yellow-950 uppercase tracking-wider border-b pb-2 mb-3 desktop-large-title">📁 7. Draft Entries List Manager</h2>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-[10px] md:text-xs font-bold uppercase text-slate-400 mb-1 desktop-large-label">Select Account Holder</label>
+                    <select id="draft-holder-id" onchange="renderDraftEntriesList()" class="w-full p-2 border border-yellow-300 rounded-lg bg-yellow-50 text-xs md:text-sm font-black text-yellow-950">
+                        <option value="">-- Choose Account --</option>
+                    </select>
+                </div>
+                <div id="draft-items-container" class="space-y-3 max-h-64 overflow-y-auto pt-2">
+                    <p class="text-xs text-slate-400 italic text-center">Please choose a holder to review drafts.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminPaidSummaryModal" class="modal-blur-bg">
+        <div class="bg-white p-5 rounded-xl shadow-2xl full-screen-modal-content relative border animate-fade-in">
+            <button onclick="closeWidgetBox('adminPaidSummaryModal')" class="absolute top-2 right-3 font-black text-xl text-slate-400 hover:text-slate-600">&times;</button>
+            <h2 class="text-xs md:text-sm font-black text-indigo-950 uppercase tracking-wider border-b pb-2 mb-3 desktop-large-title">📊 8. Paid Summary & Payment History Ledger</h2>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-[10px] md:text-xs font-bold uppercase text-slate-400 mb-1 desktop-large-label">Select Account Holder</label>
+                    <select id="summary-holder-id" onchange="renderPaidSummaryLedger()" class="w-full p-2 border border-indigo-300 rounded-lg bg-indigo-50 text-xs md:text-sm font-black text-indigo-950">
+                        <option value="">-- Choose Account --</option>
+                    </select>
+                </div>
+                <div class="overflow-x-auto rounded-lg border w-full">
+                    <table class="w-full text-left text-xs md:text-sm table-auto min-w-[340px]">
+                        <thead class="bg-slate-800 text-white text-[9px] md:text-xs uppercase">
+                            <tr>
+                                <th class="p-2 pl-3">Payment Date</th>
+                                <th class="p-2 text-right text-emerald-300">Amount Paid</th>
+                                <th class="p-2 text-right text-purple-300">Concession</th>
+                                <th class="p-2 text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="summary-ledger-rows" class="divide-y divide-slate-200">
+                            <tr><td colspan="4" class="p-4 text-center text-slate-400 italic">No historical timeline pulled.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminEditTransactionModal" class="modal-blur-bg">
+        <div class="bg-white p-5 rounded-xl shadow-2xl full-screen-modal-content relative border animate-fade-in">
+            <button onclick="closeWidgetBox('adminEditTransactionModal')" class="absolute top-2 right-3 font-black text-xl text-slate-400 hover:text-slate-600">&times;</button>
+            <h2 class="text-xs md:text-sm font-black text-purple-950 uppercase tracking-wider border-b pb-2 mb-3 desktop-large-title">⚙️ Edit Logged Trips / Transactions</h2>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-[10px] md:text-xs font-bold uppercase text-slate-400 mb-1 desktop-large-label">Select Account Holder</label>
+                    <select id="edit-tx-holder-id" onchange="fetchTripsForEditing()" class="w-full p-2 border border-purple-300 rounded-lg bg-purple-50 text-xs md:text-sm font-black text-purple-950">
+                        <option value="">-- Choose Account --</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] md:text-xs font-bold uppercase text-slate-400 mb-1 desktop-large-label">Select Month</label>
+                    <select id="edit-tx-month" onchange="fetchTripsForEditing()" class="w-full p-2 border rounded-lg bg-slate-50 text-xs md:text-sm font-bold">
+                        <option value="January">January</option><option value="February">February</option><option value="March">March</option><option value="April">April</option><option value="May">May</option><option value="June">June</option><option value="July">July</option><option value="August">August</option><option value="September">September</option><option value="October">October</option><option value="November">November</option><option value="December">December</option>
+                    </select>
+                </div>
+                <div id="edit-tx-list-container" class="space-y-2 max-h-40 overflow-y-auto hidden">
+                    <label class="block text-[10px] md:text-xs font-bold uppercase text-slate-400">Select Trip To Edit</label>
+                    <select id="edit-tx-select-index" onchange="populateTripFieldsForEdit()" class="w-full p-2 border text-xs md:text-sm bg-white font-bold rounded-lg"></select>
+                </div>
+                <div id="edit-tx-fields" class="hidden bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-2">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[9px] md:text-xs font-bold text-slate-400 uppercase">Date (DD/MM/YYYY)</label>
+                            <input type="text" id="edit-tx-date" class="w-full p-1.5 border rounded-md text-xs md:text-sm bg-white font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] md:text-xs font-bold text-slate-400 uppercase">Duration</label>
+                            <input type="text" id="edit-tx-duration" class="w-full p-1.5 border rounded-md text-xs md:text-sm bg-white">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[9px] md:text-xs font-bold text-slate-400 uppercase">Amount (₹)</label>
+                        <input type="number" id="edit-tx-amount" class="w-full p-2 border rounded-md text-xs md:text-sm font-black bg-white">
+                    </div>
+                    <button onclick="processUpdateTransaction()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-black py-2.5 rounded-lg text-xs md:text-sm shadow mt-2">
+                        💾 Update This Entry
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <div id="adminDeleteAccountModal" class="modal-blur-bg">
-        <div class="bg-white p-5 rounded-xl shadow-2xl max-w-md w-full relative border border-red-200 bg-red-50/30 animate-fade-in">
+        <div class="bg-white p-5 rounded-xl shadow-2xl full-screen-modal-content relative border border-red-200 bg-red-50/30 animate-fade-in">
             <button onclick="closeWidgetBox('adminDeleteAccountModal')" class="absolute top-2 right-3 font-black text-xl text-slate-400 hover:text-slate-600">&times;</button>
-            <h2 class="text-xs font-black text-red-950 uppercase tracking-wider border-b border-red-200 pb-2 mb-3">🗑️ Remove Profile (Reason Protected)</h2>
+            <h2 class="text-xs md:text-sm font-black text-red-950 uppercase tracking-wider border-b border-red-200 pb-2 mb-3 desktop-large-title">🗑️ Remove Profile</h2>
             <div class="space-y-3">
                 <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-400 mb-1">Select Profile To Delete</label>
-                    <select id="del-holder-id" class="w-full p-2 border border-red-300 rounded-lg bg-white text-xs font-black text-red-950">
+                    <label class="block text-[10px] md:text-xs font-bold uppercase text-slate-400 mb-1 desktop-large-label">Select Profile To Delete</label>
+                    <select id="del-holder-id" class="w-full p-2 border border-red-300 rounded-lg bg-white text-xs md:text-sm font-black text-red-950">
                         <option value="">-- Choose Account --</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold uppercase text-red-700 mb-1">Kyun Delete karna chahte hain? (Reason) *</label>
-                    <textarea id="del-reason" placeholder="Karan enter karein..." class="w-full p-2 border border-red-300 bg-white rounded-lg text-xs font-bold resize-none h-16"></textarea>
+                    <label class="block text-[10px] md:text-xs font-bold uppercase text-red-700 mb-1 desktop-large-label">Reason for deletion *</label>
+                    <textarea id="del-reason" placeholder="Karan enter karein..." class="w-full p-2 border border-red-300 bg-white rounded-lg text-xs md:text-sm font-bold resize-none h-16"></textarea>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold uppercase text-slate-500 mb-1">Account Holder ID Darj Karein *</label>
-                    <input type="text" id="del-holder-id-confirm" placeholder="e.g. MTR_1001" class="w-full p-2 border border-red-300 bg-white rounded-lg text-xs font-bold text-center tracking-wider">
+                    <label class="block text-[10px] md:text-xs font-bold uppercase text-slate-400 mb-1 desktop-large-label">Account Holder ID Darj Karein *</label>
+                    <input type="text" id="del-holder-id-confirm" placeholder="e.g. MTR_1001" class="w-full p-2 border border-red-300 bg-white rounded-lg text-xs md:text-sm font-bold text-center tracking-wider">
                 </div>
-                <div class="p-2 bg-red-100 rounded-lg text-[10px] text-red-900 font-bold border border-red-200">
+                <div class="p-2 bg-red-100 rounded-lg text-[10px] md:text-xs text-red-900 font-bold border border-red-200">
                     ⚠️ Warning: Profile tabhi delete hogi jab dues clear (₹0) honge.
                 </div>
-                <button onclick="processDeleteAccountHolderSecure()" class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-3 rounded-lg text-xs shadow cursor-pointer">
+                <button onclick="processDeleteAccountHolderSecure()" class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-3 rounded-lg text-xs md:text-sm shadow cursor-pointer">
                     🛑 Confirm Delete Account
                 </button>
             </div>
         </div>
     </div>
 
-
     <div id="adminPaymentConsoleModal" class="modal-blur-bg" style="padding: 0;">
         <div class="bg-white roster-modal-viewport flex flex-col overflow-hidden">
             <div class="bg-gradient-to-r from-emerald-800 to-slate-900 text-white p-4 flex justify-between items-center flex-shrink-0 shadow-md">
                 <div class="flex items-center gap-2">
-                    <span class="text-xl">💳</span>
+                    <span class="text-xl md:text-2xl">💳</span>
                     <div>
-                        <h3 class="text-sm font-black uppercase tracking-wide">Admin Full-Screen Collection Roster</h3>
-                        <p class="text-[9px] text-emerald-300 font-semibold">Real-time Accounting Matrix Workspace</p>
+                        <h3 class="text-sm md:text-base font-black uppercase tracking-wide">Admin Collection Roster Matrix</h3>
+                        <p class="text-[9px] md:text-xs text-emerald-300 font-semibold">Real-time Accounting Workspace</p>
                     </div>
                 </div>
                 <button onclick="closeWidgetBox('adminPaymentConsoleModal')" class="bg-white/10 hover:bg-white/20 text-white w-9 h-9 rounded-full font-black text-xl flex items-center justify-center">&times;</button>
             </div>
 
-            <div class="flex-1 overflow-hidden grid grid-cols-1 md:grid-cols-12">
-                <div class="md:col-span-4 bg-slate-50 border-r flex flex-col p-3 scrollable-roster-pane border-b md:border-b-0">
-                    <div class="mb-2 font-black text-[11px] text-slate-400 uppercase tracking-wider border-b pb-1">👥 Select Roster Account (कृषक सूची)</div>
-                    <div id="payment-roster-target" class="space-y-1 text-xs font-medium">
+            <div class="flex-1 overflow-y-auto grid grid-cols-1 md:grid-cols-12">
+                <div id="roster-sidebar-col" class="col-span-12 md:col-span-5 bg-slate-50 border-r flex flex-col p-3 h-full overflow-y-auto">
+                    <div class="mb-2 font-black text-[11px] md:text-xs text-slate-400 uppercase tracking-wider border-b pb-1">👥 Select Roster Account (कृषक सूची)</div>
+                    <div id="payment-roster-target" class="space-y-1 text-xs md:text-sm font-medium">
                         Synchronizing master roster...
                     </div>
                 </div>
 
-                <div class="md:col-span-5 p-4 scrollable-roster-pane space-y-4 bg-white border-b md:border-b-0">
+                <div id="roster-desk-col" class="hidden md:block col-span-12 md:col-span-7 p-4 h-full overflow-y-auto bg-white space-y-4">
+                    <div class="flex md:hidden items-center justify-between bg-slate-100 p-2 rounded-xl border mb-2">
+                        <button onclick="goBackToRosterMobileList()" class="bg-slate-800 text-white text-xs font-black px-3 py-1.5 rounded-lg">⬅️ Back To List</button>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Payment Desk</span>
+                    </div>
+
                     <div id="payment-billing-desk-drawer" class="hidden space-y-4">
                         <div class="flex items-center gap-2 flex-wrap">
-                            <h3 id="desk-holder-name" class="font-black text-slate-900 text-lg">Account Holder</h3>
+                            <h3 id="desk-holder-name" class="font-black text-slate-900 text-lg md:text-xl">Account Holder</h3>
                             <span id="desk-holder-highlight-badge"></span>
                         </div>
-                        <p id="desk-holder-meta" class="text-[10px] text-indigo-600 font-black tracking-wider uppercase -mt-2">UID: --</p>
+                        <p id="desk-holder-meta" class="text-[10px] md:text-xs text-indigo-600 font-black tracking-wider uppercase -mt-2">UID: --</p>
 
                         <div class="border rounded-xl overflow-x-auto bg-white shadow-md">
-                            <table class="w-full text-left text-[11px] min-w-[280px]">
+                            <table class="w-full text-left text-[11px] md:text-sm min-w-[280px]">
                                 <thead>
-                                    <tr class="bg-slate-800 text-white font-bold text-[10px] uppercase">
-                                        <th class="p-2.5 pl-3">Month (Unpaid)</th>
-                                        <th class="p-2.5 text-right">Bill</th>
-                                        <th class="p-2.5 text-right text-emerald-300">Paid</th>
-                                        <th class="p-2.5 text-right text-rose-300">Net Due</th>
-                                        <th class="p-2.5 text-center pr-2 text-cyan-300">Action</th>
+                                    <tr class="bg-slate-800 text-white font-bold text-[10px] md:text-xs uppercase">
+                                        <th class="p-2.5 md:p-3.5 pl-3">Month (Unpaid)</th>
+                                        <th class="p-2.5 md:p-3.5 text-right">Bill</th>
+                                        <th class="p-2.5 md:p-3.5 text-right text-emerald-300">Paid</th>
+                                        <th class="p-2.5 md:p-3.5 text-right text-rose-300">Net Due</th>
+                                        <th class="p-2.5 md:p-3.5 text-center pr-2 text-cyan-300">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="desk-statement-rows" class="divide-y divide-slate-200"></tbody>
@@ -278,95 +519,81 @@
                         <div class="bg-emerald-50/90 p-4 rounded-xl border border-emerald-200 space-y-3 shadow-inner">
                             <div class="grid grid-cols-3 gap-2">
                                 <div>
-                                    <label class="block text-[9px] font-bold text-slate-500 uppercase mb-0.5">Gross Due</label>
-                                    <input type="number" id="cash-gross-due" readonly class="w-full p-1.5 border bg-slate-100 rounded-md text-xs font-black text-center">
+                                    <label class="block text-[9px] md:text-xs font-bold text-slate-500 uppercase mb-0.5">Gross Due</label>
+                                    <input type="number" id="cash-gross-due" readonly class="w-full p-1.5 border bg-slate-100 rounded-md text-xs md:text-sm font-black text-center">
                                 </div>
                                 <div>
-                                    <label class="block text-[9px] font-bold text-purple-700 uppercase mb-0.5">Discount</label>
-                                    <input type="number" id="cash-concession" value="0" oninput="calculateLiveCashIntake()" class="w-full p-1.5 border border-purple-200 bg-white rounded-md text-xs font-black text-center">
+                                    <label class="block text-[9px] md:text-xs font-bold text-purple-700 uppercase mb-0.5">Discount</label>
+                                    <input type="number" id="cash-concession" value="0" oninput="calculateLiveCashIntake()" class="w-full p-1.5 border border-purple-200 bg-white rounded-md text-xs md:text-sm font-black text-center">
                                 </div>
                                 <div>
-                                    <label class="block text-[9px] font-bold text-emerald-800 uppercase mb-0.5">Amt Received</label>
-                                    <input type="number" id="cash-intake-amount" class="w-full p-1.5 border border-emerald-300 bg-white rounded-md text-xs font-black text-center">
+                                    <label class="block text-[9px] md:text-xs font-bold text-emerald-800 uppercase mb-0.5">Amt Received</label>
+                                    <input type="number" id="cash-intake-amount" class="w-full p-1.5 border border-emerald-300 bg-white rounded-md text-xs md:text-sm font-black text-center">
                                 </div>
                             </div>
-                            <button onclick="processFinalizeBillPayment()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 rounded-xl text-xs shadow transition-all cursor-pointer">
+                            <button onclick="processFinalizeBillPayment()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 rounded-xl text-xs md:text-sm shadow transition-all cursor-pointer">
                                 💳 Clear Dues & Save Transaction
                             </button>
                         </div>
                     </div>
-                    <div id="desk-blanket-state-msg" class="text-center py-20 text-slate-400 font-bold text-xs">
-                        👈 Please select an account holder from left sidebar to populate full screen data matrix.
+                    <div id="desk-blanket-state-msg" class="text-center py-20 text-slate-400 font-bold text-xs md:text-sm">
+                        👈 Please select an account holder to populate data matrix.
                     </div>
-                </div>
-
-                <div class="md:col-span-3 bg-slate-100 p-4 border-l scrollable-roster-pane flex flex-col justify-start items-center space-y-4">
-                    <div class="w-full text-center">
-                        <div class="font-black text-[10px] text-slate-400 uppercase tracking-wider mb-3">📄 Live Spot Invoice Engine</div>
-                        <div id="desk-live-receipt-placeholder" class="text-slate-400 font-bold text-xs py-10 italic">
-                            No active invoice loaded. Click "Pop Receipt" inside the ledger rows.
-                        </div>
-                        <div id="desk-receipt-embed-container" class="hidden thermal-receipt animate-fade-in shadow-lg mb-4"></div>
-                    </div>
-                    <button id="desk-receipt-print-btn" onclick="window.print()" class="hidden w-full max-w-[7.5cm] bg-slate-900 hover:bg-black text-white font-black py-2.5 rounded-lg text-xs shadow cursor-pointer text-center">
-                        🖨️ Print Spot Invoice
-                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-
     <div id="customerViewModal" class="modal-blur-bg">
-        <div class="bg-white w-full h-full md:h-auto md:max-w-xl rounded-none md:rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fade-in">
+        <div class="bg-white w-full h-full md:h-auto full-screen-modal-content rounded-none md:rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fade-in">
             <div class="bg-gradient-to-r from-blue-700 via-indigo-700 to-slate-900 text-white p-4 text-center relative flex-shrink-0">
                 <button onclick="closeWidgetBox('customerViewModal')" class="absolute top-3 right-3 bg-white/10 text-white w-8 h-8 rounded-full flex items-center justify-center font-black text-lg hover:bg-white/20 transition-colors">&times;</button>
-                <h3 class="text-sm font-black tracking-wide">Water Bill Statement Center</h3>
-                <p class="text-[10px] text-indigo-200 font-semibold">View Matrix Balances & Payment Logs History</p>
+                <h3 class="text-sm md:text-base font-black tracking-wide">Water Bill Statement Center</h3>
+                <p class="text-[10px] md:text-xs text-indigo-200 font-semibold">View Matrix Balances & Payment Logs History</p>
             </div>
             
             <div class="p-4 flex-1 overflow-y-auto space-y-4">
-                <div class="bg-slate-50 p-3 rounded-xl border text-xs space-y-3">
+                <div class="bg-slate-50 p-3 rounded-xl border text-xs md:text-sm space-y-3">
                     <div>
-                        <label class="block text-[10px] font-black text-slate-500 uppercase mb-1">Account Holder Name (किसान ka naam chunein):</label>
-                        <select id="search-holder-id" onchange="executePublicStatementSearch()" class="p-2.5 border bg-white rounded-xl font-bold w-full text-xs text-slate-800 shadow-sm">
+                        <label class="block text-[10px] md:text-xs font-black text-slate-500 uppercase mb-1">Account Holder Name (किसान ka naam chunein):</label>
+                        <select id="search-holder-id" onchange="executePublicStatementSearch()" class="p-2.5 border bg-white rounded-xl font-bold w-full text-xs md:text-sm text-slate-800 shadow-sm">
                             <option value="">-- Choose Name --</option>
                         </select>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-2 pt-1">
-                        <button onclick="triggerHistorySelectionMode('single')" class="bg-cyan-800 hover:bg-cyan-900 text-white font-black py-2.5 rounded-xl text-[11px] cursor-pointer shadow-sm transition-all text-center">📅 1 Month History (Receipt view)</button>
-                        <button onclick="triggerHistorySelectionMode('all')" class="bg-blue-800 hover:bg-blue-900 text-white font-black py-2.5 rounded-xl text-[11px] cursor-pointer shadow-sm transition-all text-center">📊 Active Dues Statement</button>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                        <button onclick="triggerHistorySelectionMode('single')" class="bg-cyan-800 hover:bg-cyan-900 text-white font-black py-2.5 rounded-xl text-[11px] md:text-xs cursor-pointer shadow-sm transition-all text-center">📅 1 Month History (Receipt view)</button>
+                        <button onclick="triggerHistorySelectionMode('all')" class="bg-blue-800 hover:bg-blue-900 text-white font-black py-2.5 rounded-xl text-[11px] md:text-xs cursor-pointer shadow-sm transition-all text-center">📊 Active Dues Statement</button>
                     </div>
 
                     <div id="single-month-dropdown-wrapper" class="hidden bg-white p-2.5 rounded-xl border border-cyan-200 shadow-inner">
-                        <label class="block text-[10px] font-black text-cyan-800 uppercase mb-1">Select Month to Open Receipt Popup:</label>
-                        <select id="search-filter-isolated-month" onchange="executeIsolatedMonthReceiptTrigger()" class="p-2 border bg-slate-50 rounded-md font-bold w-full text-xs">
+                        <label class="block text-[10px] md:text-xs font-black text-cyan-800 uppercase mb-1">Select Month to Open Receipt Popup:</label>
+                        <select id="search-filter-isolated-month" onchange="executeIsolatedMonthReceiptTrigger()" class="p-2 border bg-slate-50 rounded-md font-bold w-full text-xs md:text-sm">
                             <option value="">-- Choose Month --</option>
                             <option value="January">January</option><option value="February">February</option><option value="March">March</option><option value="April">April</option><option value="May">May</option><option value="June">June</option><option value="July">July</option><option value="August">August</option><option value="September">September</option><option value="October">October</option><option value="November">November</option><option value="December">December</option>
                         </select>
                     </div>
                 </div>
-                <div id="search-output-viewport" class="space-y-2 pr-1 hidden"></div>
+                <div id="search-output-viewport" class="space-y-2 pr-1 hidden w-full overflow-x-auto"></div>
             </div>
         </div>
     </div>
 
     <div id="logsHistoryPopupModal" class="modal-blur-bg">
-        <div class="bg-white rounded-xl p-4 shadow-2xl relative max-w-md w-full border flex flex-col max-h-[85vh] animate-fade-in">
+        <div class="bg-white rounded-xl p-4 shadow-2xl full-screen-modal-content relative border flex flex-col max-h-[85vh] animate-fade-in">
             <button onclick="closeWidgetBox('logsHistoryPopupModal')" class="absolute top-2 right-3 font-black text-xl text-slate-400 hover:text-slate-600">&times;</button>
-            <h3 class="text-sm font-black text-slate-900 border-b pb-2 mb-3 text-left uppercase tracking-wider">📜 Complete Logs & Payment History</h3>
+            <h3 class="text-sm md:text-base font-black text-slate-900 border-b pb-2 mb-3 text-left uppercase tracking-wider">📜 Complete Logs & Payment History</h3>
             <div id="pop-logs-history-container" class="overflow-y-auto space-y-2 flex-1 pr-1"></div>
         </div>
     </div>
 
     <div id="receiptPopupModal" class="modal-blur-bg">
-        <div class="bg-white rounded-xl p-4 shadow-2xl relative max-w-sm w-full border text-center animate-fade-in">
+        <div class="bg-white rounded-xl p-4 shadow-2xl relative max-w-sm md:max-w-md w-full border text-center animate-fade-in">
             <button onclick="closeWidgetBox('receiptPopupModal')" class="no-print absolute top-2 right-3 font-black text-xl text-slate-400 hover:text-slate-600">&times;</button>
             <div id="global-print-receipt-node" class="thermal-receipt" style="border:none;"></div>
             <div class="no-print mt-4 flex gap-2 justify-center">
-                <button onclick="window.print()" class="bg-slate-900 hover:bg-black text-white font-black py-2 px-4 rounded-lg text-xs shadow cursor-pointer">🖨️ Print Receipt</button>
-                <button onclick="closeWidgetBox('receiptPopupModal')" class="bg-slate-200 text-slate-800 font-bold py-2 px-4 rounded-lg text-xs cursor-pointer">Close</button>
+                <button onclick="window.print()" class="bg-slate-900 hover:bg-black text-white font-black py-2 px-4 rounded-lg text-xs md:text-sm shadow cursor-pointer">🖨️ Print Receipt</button>
+                <button onclick="closeWidgetBox('receiptPopupModal')" class="bg-slate-200 text-slate-800 font-bold py-2 px-4 rounded-lg text-xs md:text-sm cursor-pointer">Close</button>
             </div>
         </div>
     </div>
@@ -374,20 +601,31 @@
     <div id="alertNotificationModal" class="modal-blur-bg">
         <div class="bg-white rounded-xl p-4 shadow-2xl max-w-xs w-full text-center border space-y-3">
             <div class="w-10 h-10 bg-emerald-100 text-emerald-700 text-xl flex items-center justify-center rounded-full mx-auto font-black">✓</div>
-            <p id="alert-modal-message-body" class="text-xs font-bold text-slate-600 leading-relaxed"></p>
-            <button onclick="closeWidgetBox('alertNotificationModal')" class="w-full bg-slate-900 text-white font-bold py-2 rounded-lg text-xs cursor-pointer">OK</button>
+            <p id="alert-modal-message-body" class="text-xs md:text-sm font-bold text-slate-600 leading-relaxed"></p>
+            <button onclick="closeWidgetBox('alertNotificationModal')" class="w-full bg-slate-900 text-white font-bold py-2 rounded-lg text-xs md:text-sm cursor-pointer">OK</button>
         </div>
     </div>
 
     <div id="loginPanelModal" class="modal-blur-bg">
-        <div class="bg-white rounded-xl max-w-xs w-full p-4 shadow-2xl relative border">
-            <button onclick="closeWidgetBox('loginPanelModal')" class="absolute top-2 right-3 font-black text-lg text-slate-400">&times;</button>
-            <h4 class="text-[10px] font-black text-slate-400 tracking-widest text-center mb-2 uppercase">System Verification</h4>
-            <input type="password" id="admin-pass-key-input" placeholder="Enter System PIN" class="w-full p-2 border rounded-lg text-xs text-center tracking-widest font-bold">
-            <button onclick="verifyAndUnlockAdminWorkspace()" class="w-full bg-cyan-700 text-white font-black py-2 rounded-lg text-xs mt-2 cursor-pointer shadow-md">Unlock Workspace</button>
+        <div class="neon-login-card animate-fade-in">
+            <button onclick="closeWidgetBox('loginPanelModal')" class="absolute top-3 right-4 font-black text-slate-400 text-xl hover:text-white transition-colors">&times;</button>
+            <h2>Welcome Back</h2>
+            
+            <div class="neon-input-group">
+                <label>Username</label>
+                <input type="text" id="admin-username-input" placeholder="Enter your username" autocomplete="off">
+            </div>
+            
+            <div class="neon-input-group">
+                <label>Password</label>
+                <input type="password" id="admin-pass-key-input" placeholder="Enter your password">
+            </div>
+            
+            <button onclick="verifyAndUnlockAdminWorkspace()" class="neon-login-btn">Login</button>
+            
+            <div class="text-xs text-slate-500 font-medium">Forgot Password?</div>
         </div>
     </div>
-
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -435,7 +673,21 @@
 
         window.openTripEntryModalPopup = function() {
             openWidgetBox('adminTripEntryModal');
+            document.getElementById('trip-modal-dues-box').classList.add('hidden');
             syncAdminDropdownHolders();
+        }
+
+        window.openEditProfileModalPopup = function() {
+            openWidgetBox('adminEditProfileModal');
+            syncEditProfileDropdownHolders();
+            document.getElementById('edit-profile-fields').classList.add('hidden');
+        }
+
+        window.openEditTransactionModalPopup = function() {
+            openWidgetBox('adminEditTransactionModal');
+            syncEditTxDropdownHolders();
+            document.getElementById('edit-tx-list-container').classList.add('hidden');
+            document.getElementById('edit-tx-fields').classList.add('hidden');
         }
 
         window.openDeleteAccountModalPopup = function() {
@@ -443,15 +695,30 @@
             syncDeleteAccountHolders();
         }
 
+        window.openDraftManagerModalPopup = function() {
+            openWidgetBox('adminDraftManagerModal');
+            syncDraftDropdownHolders();
+            document.getElementById('draft-items-container').innerHTML = "<p class='text-xs text-slate-400 italic text-center'>Please choose a holder to review drafts.</p>";
+        }
+
+        window.openPaidSummaryModalPopup = function() {
+            openWidgetBox('adminPaidSummaryModal');
+            syncPaidSummaryDropdownHolders();
+            document.getElementById('summary-ledger-rows').innerHTML = "<tr><td colspan='4' class='p-4 text-center text-slate-400 italic'>No historical timeline pulled.</td></tr>";
+        }
+
         window.openPaymentGatewayPopupModal = function() {
             openWidgetBox('adminPaymentConsoleModal');
             loadHoldersToPaymentRoster();
-            
+            goBackToRosterMobileList();
             document.getElementById('payment-billing-desk-drawer').classList.add('hidden');
             document.getElementById('desk-blanket-state-msg').classList.remove('hidden');
-            document.getElementById('desk-receipt-embed-container').classList.add('hidden');
-            document.getElementById('desk-live-receipt-placeholder').classList.remove('hidden');
-            document.getElementById('desk-receipt-print-btn').classList.add('hidden');
+        }
+
+        window.goBackToRosterMobileList = function() {
+            document.getElementById('roster-sidebar-col').classList.remove('hidden');
+            document.getElementById('roster-desk-col').classList.add('hidden');
+            document.getElementById('roster-desk-col').classList.remove('block');
         }
 
         window.triggerHistorySelectionMode = function(mode) {
@@ -493,15 +760,18 @@
         }
 
         window.verifyAndUnlockAdminWorkspace = function() {
+            const user = document.getElementById('admin-username-input').value.trim();
             const pin = document.getElementById('admin-pass-key-input').value;
+            
             if(pin === "2026") {
                 activeAdminAuthorized = true;
+                document.getElementById('admin-username-input').value = "";
                 document.getElementById('admin-pass-key-input').value = "";
                 closeWidgetBox('loginPanelModal');
                 evaluateAuthWorkspaceVisualState();
                 calculateGlobalFinancialRevenueDashboard();
             } else {
-                alert("Incorrect PIN Code Specified!");
+                alert("Incorrect Password PIN Code Specified!");
             }
         }
         window.logoutAdminGate = function() {
@@ -550,6 +820,7 @@
                     mobile: mob || "N/A",
                     address: addr || "N/A",
                     monthlyLedger: monthlyLedger,
+                    paymentHistory: [],
                     timestamp: Date.now()
                 });
 
@@ -572,6 +843,195 @@
                 snap.forEach(d => {
                     selectEl.innerHTML += `<option value="${d.id}">${d.data().name} (ID: ${d.data().serialNumber})</option>`;
                 });
+            } catch(e){}
+        }
+
+        window.syncDraftDropdownHolders = async function() {
+            const selectEl = document.getElementById('draft-holder-id');
+            selectEl.innerHTML = "<option value=''>Syncing...</option>";
+            try {
+                const snap = await getDocs(collection(db, "water_holders"));
+                selectEl.innerHTML = "<option value=''>-- Choose Account --</option>";
+                snap.forEach(d => {
+                    selectEl.innerHTML += `<option value="${d.id}">${d.data().name} (ID: ${d.data().serialNumber})</option>`;
+                });
+            } catch(e){}
+        }
+
+        window.syncPaidSummaryDropdownHolders = async function() {
+            const selectEl = document.getElementById('summary-holder-id');
+            selectEl.innerHTML = "<option value=''>Syncing...</option>";
+            try {
+                const snap = await getDocs(collection(db, "water_holders"));
+                selectEl.innerHTML = "<option value=''>-- Choose Account --</option>";
+                snap.forEach(d => {
+                    selectEl.innerHTML += `<option value="${d.id}">${d.data().name} (ID: ${d.data().serialNumber})</option>`;
+                });
+            } catch(e){}
+        }
+
+        window.showLiveDuesInTripModal = async function() {
+            const uid = document.getElementById('entry-holder-id').value;
+            const box = document.getElementById('trip-modal-dues-box');
+            const target = document.getElementById('trip-modal-live-dues');
+            if(!uid) { box.classList.add('hidden'); return; }
+            
+            try {
+                const snap = await getDoc(doc(db, "water_holders", uid));
+                if(snap.exists()) {
+                    const matrix = evaluateIsolatedBalanceMatrix(snap.data());
+                    target.innerText = `₹${Math.round(matrix.netGlobalDues)}`;
+                    box.classList.remove('hidden');
+                }
+            } catch(e) {}
+        }
+
+        window.syncEditProfileDropdownHolders = async function() {
+            const selectEl = document.getElementById('edit-profile-holder-id');
+            selectEl.innerHTML = "<option value=''>Syncing...</option>";
+            try {
+                const snap = await getDocs(collection(db, "water_holders"));
+                selectEl.innerHTML = "<option value=''>-- Choose Account --</option>";
+                snap.forEach(d => {
+                    selectEl.innerHTML += `<option value="${d.id}">${d.data().name} (ID: ${d.data().serialNumber})</option>`;
+                });
+            } catch(e){}
+        }
+
+        window.fetchHolderDetailsForEdit = async function() {
+            const uid = document.getElementById('edit-profile-holder-id').value;
+            const fieldsBox = document.getElementById('edit-profile-fields');
+            if(!uid) { fieldsBox.classList.add('hidden'); return; }
+
+            try {
+                const snap = await getDoc(doc(db, "water_holders", uid));
+                if(snap.exists()) {
+                    const data = snap.data();
+                    document.getElementById('edit-reg-name').value = data.name || "";
+                    document.getElementById('edit-reg-mobile').value = data.mobile || "";
+                    document.getElementById('edit-reg-address').value = data.address || "";
+                    fieldsBox.classList.remove('hidden');
+                }
+            } catch(e){}
+        }
+
+        window.processUpdateHolderProfile = async function() {
+            const uid = document.getElementById('edit-profile-holder-id').value;
+            const name = document.getElementById('edit-reg-name').value.trim();
+            const mob = document.getElementById('edit-reg-mobile').value.trim();
+            const addr = document.getElementById('edit-reg-address').value.trim();
+
+            if(!name) { alert("Name required!"); return; }
+
+            try {
+                await updateDoc(doc(db, "water_holders", uid), {
+                    name: name,
+                    mobile: mob || "N/A",
+                    address: addr || "N/A"
+                });
+                renderAlertModalNotification("Profile updated successfully!");
+                closeWidgetBox('adminEditProfileModal');
+                syncPublicSearchDropdownHolders();
+            } catch(e){}
+        }
+
+        window.syncEditTxDropdownHolders = async function() {
+            const selectEl = document.getElementById('edit-tx-holder-id');
+            selectEl.innerHTML = "<option value=''>Syncing...</option>";
+            try {
+                const snap = await getDocs(collection(db, "water_holders"));
+                selectEl.innerHTML = "<option value=''>-- Choose Account --</option>";
+                snap.forEach(d => {
+                    selectEl.innerHTML += `<option value="${d.id}">${d.data().name} (ID: ${d.data().serialNumber})</option>`;
+                });
+            } catch(e){}
+        }
+
+        let globalCurrentEditingLedger = null;
+
+        window.fetchTripsForEditing = async function() {
+            const uid = document.getElementById('edit-tx-holder-id').value;
+            const month = document.getElementById('edit-tx-month').value;
+            const listContainer = document.getElementById('edit-tx-list-container');
+            const selectIndex = document.getElementById('edit-tx-select-index');
+            const fieldsBox = document.getElementById('edit-tx-fields');
+
+            fieldsBox.classList.add('hidden');
+            if(!uid) { listContainer.classList.add('hidden'); return; }
+
+            try {
+                const snap = await getDoc(doc(db, "water_holders", uid));
+                if(snap.exists()) {
+                    const data = snap.data();
+                    globalCurrentEditingLedger = data.monthlyLedger || {};
+                    const trips = (globalCurrentEditingLedger[month]?.trips || []).filter(t => !t.isDraft);
+                    
+                    if(trips.length === 0) {
+                        selectIndex.innerHTML = "<option value=''>No completed trips found in this month</option>";
+                        listContainer.classList.remove('hidden');
+                        return;
+                    }
+
+                    selectIndex.innerHTML = "<option value=''>-- Select Trip --</option>";
+                    trips.forEach((t, idx) => {
+                        selectIndex.innerHTML += `<option value="${idx}">Trip ${idx+1}: ${t.date} - ₹${t.amount}</option>`;
+                    });
+                    listContainer.classList.remove('hidden');
+                }
+            } catch(e){}
+        }
+
+        window.populateTripFieldsForEdit = function() {
+            const idx = document.getElementById('edit-tx-select-index').value;
+            const month = document.getElementById('edit-tx-month').value;
+            const fieldsBox = document.getElementById('edit-tx-fields');
+
+            if(idx === "" || !globalCurrentEditingLedger) { fieldsBox.classList.add('hidden'); return; }
+            
+            const trips = (globalCurrentEditingLedger[month].trips || []).filter(t => !t.isDraft);
+            const trip = trips[idx];
+            document.getElementById('edit-tx-date').value = trip.date;
+            document.getElementById('edit-tx-duration').value = trip.duration;
+            document.getElementById('edit-tx-amount').value = trip.amount;
+            fieldsBox.classList.remove('hidden');
+        }
+
+        window.processUpdateTransaction = async function() {
+            const uid = document.getElementById('edit-tx-holder-id').value;
+            const month = document.getElementById('edit-tx-month').value;
+            const idx = parseInt(document.getElementById('edit-tx-select-index').value);
+
+            const updatedDate = document.getElementById('edit-tx-date').value.trim();
+            const updatedDuration = document.getElementById('edit-tx-duration').value.trim();
+            const updatedAmount = parseFloat(document.getElementById('edit-tx-amount').value) || 0;
+
+            if(!updatedDate || !updatedDuration || updatedAmount <= 0) { alert("Sahi details bharein"); return; }
+
+            try {
+                let allTrips = globalCurrentEditingLedger[month].trips || [];
+                let compIdx = -1;
+                let cCount = 0;
+                for(let i=0; i<allTrips.length; i++){
+                    if(!allTrips[i].isDraft){
+                        if(cCount === idx) { compIdx = i; break; }
+                        cCount++;
+                    }
+                }
+
+                if(compIdx !== -1) {
+                    allTrips[compIdx].date = updatedDate;
+                    allTrips[compIdx].duration = updatedDuration;
+                    allTrips[compIdx].amount = updatedAmount;
+                }
+
+                let sumBilled = 0;
+                allTrips.forEach(t => { if(!t.isDraft) sumBilled += t.amount; });
+                globalCurrentEditingLedger[month].totalBilled = sumBilled;
+
+                await updateDoc(doc(db, "water_holders", uid), { monthlyLedger: globalCurrentEditingLedger });
+                renderAlertModalNotification("Trip Entry Updated Successfully!");
+                closeWidgetBox('adminEditTransactionModal');
+                calculateGlobalFinancialRevenueDashboard();
             } catch(e){}
         }
 
@@ -634,15 +1094,17 @@
             } catch(e) { alert("Operation failed."); }
         }
 
-        window.commitUsageTripLog = async function() {
+        window.commitUsageTripLog = async function(isDraftMode = false) {
             const targetUid = document.getElementById('entry-holder-id').value;
             const month = document.getElementById('entry-month').value;
             const dateVal = document.getElementById('entry-date').value;
             let duration = document.getElementById('entry-duration').value.trim();
             const amount = parseFloat(document.getElementById('entry-amount').value) || 0;
 
-            if(!targetUid || !dateVal || !duration || amount <= 0) { alert("Sahi Details bharein."); return; }
-            if(!isNaN(duration)) duration = duration + " Hours";
+            if(!targetUid || !dateVal) { alert("Account Holder aur Date chunna anivarya hai."); return; }
+            if(!isDraftMode && (!duration || amount <= 0)) { alert("Trip complete karne ke liye Duration aur Amount daalna jaruri hai."); return; }
+
+            if(duration && !isNaN(duration)) duration = duration + " Hours";
 
             try {
                 const docRef = doc(db, "water_holders", targetUid);
@@ -658,12 +1120,14 @@
                 let cleanFormattedDate = `${String(parsedDate.getDate()).padStart(2, '0')}/${String(parsedDate.getMonth() + 1).padStart(2, '0')}/${fullYearSuffix}`;
 
                 let singleTripNode = {
+                    id: 'tx_' + Date.now() + Math.floor(Math.random() * 100),
                     date: cleanFormattedDate,
                     day: dayName,
                     year: fullYearSuffix,
                     time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                    duration: duration,
-                    amount: amount,
+                    duration: duration || "",
+                    amount: amount || 0,
+                    isDraft: isDraftMode,
                     loggedAtTimestamp: Date.now()
                 };
 
@@ -673,16 +1137,188 @@
                 data.monthlyLedger[month].trips.push(singleTripNode);
                 
                 let sumBilled = 0;
-                data.monthlyLedger[month].trips.forEach(t => sumBilled += t.amount);
+                data.monthlyLedger[month].trips.forEach(t => {
+                    if(!t.isDraft) sumBilled += t.amount;
+                });
                 data.monthlyLedger[month].totalBilled = sumBilled;
 
                 await updateDoc(docRef, { monthlyLedger: data.monthlyLedger });
-                renderAlertModalNotification(`Trip Logged under ${month} for ₹${amount}`);
+                renderAlertModalNotification(isDraftMode ? `Draft Saved Safely under ${month}!` : `Trip Logged under ${month} for ₹${amount}`);
                 closeWidgetBox('adminTripEntryModal');
                 document.getElementById('entry-duration').value = "";
                 document.getElementById('entry-amount').value = "";
                 calculateGlobalFinancialRevenueDashboard();
             } catch(e){}
+        }
+
+        window.renderDraftEntriesList = async function() {
+            const uid = document.getElementById('draft-holder-id').value;
+            const container = document.getElementById('draft-items-container');
+            if(!uid) { container.innerHTML = "<p class='text-xs text-slate-400 italic text-center'>Please choose a holder to review drafts.</p>"; return; }
+
+            container.innerHTML = "<p class='text-xs text-center'>Fetching drafts matrix...</p>";
+            try {
+                const snap = await getDoc(doc(db, "water_holders", uid));
+                if(!snap.exists()) return;
+                const data = snap.data();
+                
+                let draftHTML = "";
+                let hasDrafts = false;
+
+                CHRONO_MONTHS.forEach(m => {
+                    const trips = data.monthlyLedger?.[m]?.trips || [];
+                    trips.forEach(t => {
+                        if(t.isDraft) {
+                            hasDrafts = true;
+                            draftHTML += `
+                                <div class="p-3 bg-yellow-50/60 border border-yellow-200 rounded-xl space-y-2 text-left text-xs md:text-sm">
+                                    <div class="flex justify-between items-center border-b pb-1">
+                                        <span class="font-black text-yellow-950">Month: ${m} (${t.date})</span>
+                                        <span class="bg-yellow-200 text-yellow-800 px-1.5 py-0.5 rounded text-[10px] font-bold">Draft</span>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase">Duration</label>
+                                            <input type="text" id="draft-dur-${t.id}" value="${t.duration}" placeholder="e.g. 2 Hours" class="w-full p-1 border bg-white rounded text-xs">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-bold text-slate-400 uppercase">Amount (₹)</label>
+                                            <input type="number" id="draft-amt-${t.id}" value="${t.amount || ''}" placeholder="Amount" class="w-full p-1 border bg-white rounded text-xs font-bold">
+                                        </div>
+                                    </div>
+                                    <button onclick="processFinalizeDraftEntry('${uid}', '${m}', '${t.id}')" class="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-1.5 rounded text-xs shadow">
+                                        🚀 Complete & Log This Entry
+                                    </button>
+                                </div>
+                            `;
+                        }
+                    });
+                });
+
+                container.innerHTML = hasDrafts ? draftHTML : "<p class='text-xs text-slate-400 italic text-center py-4 text-emerald-600 font-bold'>No pending drafts for this holder! All clear. 🎉</p>";
+            } catch(e){ container.innerHTML = "<p class='text-xs text-red-500'>Error loading drafts.</p>"; }
+        }
+
+        window.processFinalizeDraftEntry = async function(uid, month, txId) {
+            const durVal = document.getElementById(`draft-dur-${txId}`).value.trim();
+            const amtVal = parseFloat(document.getElementById(`draft-amt-${txId}`).value) || 0;
+
+            if(!durVal || amtVal <= 0) { alert("Sahi duration aur amount enter karein!"); return; }
+
+            try {
+                const docRef = doc(db, "water_holders", uid);
+                const snap = await getDoc(docRef);
+                if(!snap.exists()) return;
+
+                let data = snap.data();
+                let trips = data.monthlyLedger[month].trips || [];
+                
+                let matchedIdx = trips.findIndex(x => x.id === txId);
+                if(matchedIdx !== -1) {
+                    trips[matchedIdx].duration = durVal;
+                    trips[matchedIdx].amount = amtVal;
+                    trips[matchedIdx].isDraft = false; 
+                }
+
+                let sumBilled = 0;
+                trips.forEach(t => { if(!t.isDraft) sumBilled += t.amount; });
+                data.monthlyLedger[month].totalBilled = sumBilled;
+
+                await updateDoc(docRef, { monthlyLedger: data.monthlyLedger });
+                renderAlertModalNotification("Draft Transaction Finalized Successfully!");
+                renderDraftEntriesList();
+                calculateGlobalFinancialRevenueDashboard();
+            } catch(e){}
+        }
+
+        window.renderPaidSummaryLedger = async function() {
+            const uid = document.getElementById('summary-holder-id').value;
+            const rowsContainer = document.getElementById('summary-ledger-rows');
+            if(!uid) { rowsContainer.innerHTML = "<tr><td colspan='4' class='p-4 text-center text-slate-400 italic'>No historical timeline pulled.</td></tr>"; return; }
+
+            rowsContainer.innerHTML = "<tr><td colspan='4' class='p-4 text-center text-xs'>Loading logs history...</td></tr>";
+            try {
+                const snap = await getDoc(doc(db, "water_holders", uid));
+                if(!snap.exists()) return;
+                const data = snap.data();
+                const history = data.paymentHistory || [];
+
+                if(history.length === 0) {
+                    rowsContainer.innerHTML = "<tr><td colspan='4' class='p-4 text-center text-slate-400 italic'>No formal payment entries recorded yet.</td></tr>";
+                    return;
+                }
+
+                rowsContainer.innerHTML = "";
+                history.forEach((p, index) => {
+                    const row = document.createElement('tr');
+                    row.className = "bg-white text-xs md:text-sm text-slate-700";
+                    row.innerHTML = `
+                        <td class="p-2.5 font-bold pl-3">${p.date || 'N/A'}</td>
+                        <td class="p-2.5 text-right font-mono font-black text-emerald-600">₹${Math.round(p.amountPaid)}</td>
+                        <td class="p-2.5 text-right font-mono text-purple-600">₹${Math.round(p.concession || 0)}</td>
+                        <td class="p-1.5 text-center">
+                            <button onclick="triggerEditPaidLogInline('${uid}', ${index})" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-2 py-1 rounded text-[10px] shadow-sm cursor-pointer">
+                                ✏️ Edit
+                            </button>
+                        </td>
+                    `;
+                    rowsContainer.appendChild(row);
+                });
+            } catch(e){}
+        }
+
+        window.triggerEditPaidLogInline = async function(uid, historyIdx) {
+            try {
+                const docRef = doc(db, "water_holders", uid);
+                const snap = await getDoc(docRef);
+                if(!snap.exists()) return;
+                const data = snap.data();
+                let history = data.paymentHistory || [];
+                let pLog = history[historyIdx];
+
+                const promptAmt = prompt("Sahi Paid Amount (₹) darj karein:", pLog.amountPaid);
+                if(promptAmt === null) return;
+                const nextAmt = parseFloat(promptAmt) || 0;
+
+                const promptDisc = prompt("Sahi Concession/Discount (₹) darj karein:", pLog.concession || 0);
+                if(promptDisc === null) return;
+                const nextDisc = parseFloat(promptDisc) || 0;
+
+                let deltaPaid = nextAmt - pLog.amountPaid;
+                let deltaDisc = nextDisc - (pLog.concession || 0);
+
+                pLog.amountPaid = nextAmt;
+                pLog.concession = nextDisc;
+
+                let ledger = data.monthlyLedger || {};
+                let combinedAdjustment = deltaPaid + deltaDisc;
+
+                for(let i = CHRONO_MONTHS.length - 1; i >= 0; i--) {
+                    let m = CHRONO_MONTHS[i];
+                    if(ledger[m] && combinedAdjustment !== 0) {
+                        if(combinedAdjustment > 0) {
+                            let space = ledger[m].totalBilled - (ledger[m].totalPaid + ledger[m].concession);
+                            if(space > 0) {
+                                let alloc = Math.min(space, combinedAdjustment);
+                                ledger[m].totalPaid += alloc; 
+                                combinedAdjustment -= alloc;
+                            }
+                        } else {
+                            let availableToDeduct = ledger[m].totalPaid;
+                            if(availableToDeduct > 0) {
+                                let deduct = Math.min(availableToDeduct, Math.abs(combinedAdjustment));
+                                ledger[m].totalPaid -= deduct;
+                                combinedAdjustment += deduct;
+                            }
+                        }
+                    }
+                }
+
+                await updateDoc(docRef, { paymentHistory: history, monthlyLedger: ledger });
+                alert("Payment Ledger Matrix updated successfully!");
+                renderPaidSummaryLedger();
+                calculateGlobalFinancialRevenueDashboard();
+            } catch(e){ alert("Adjustment execution fault."); }
         }
 
         window.loadHoldersToPaymentRoster = async function() {
@@ -697,9 +1333,17 @@
                     const h = d.data();
                     let dues = evaluateIsolatedBalanceMatrix(h).netGlobalDues;
                     const rowBtn = document.createElement('button');
-                    rowBtn.className = "w-full text-left p-3 rounded-xl bg-white mb-1.5 border flex justify-between items-center text-xs font-bold cursor-pointer hover:bg-emerald-50/70 transition-all shadow-sm";
-                    rowBtn.innerHTML = `<div><p class='text-slate-900 font-black'>${h.name}</p><span class='text-[9px] text-slate-400 font-normal'>ID: ${h.accountId}</span></div><span class='px-2 py-0.5 rounded-md text-[11px] font-mono ${dues > 0 ? "bg-rose-50 text-rose-600 font-black" : "bg-emerald-50 text-emerald-600"}'>₹${dues}</span>`;
-                    rowBtn.onclick = () => activatePaymentDeskDrawerForHolder(d.id, h);
+                    rowBtn.className = "w-full text-left p-3 md:p-4 rounded-xl bg-white mb-1.5 border flex justify-between items-center text-xs md:text-base font-bold cursor-pointer hover:bg-emerald-50/70 transition-all shadow-sm";
+                    rowBtn.innerHTML = `<div><p class='text-slate-900 font-black md:text-base'>${h.name}</p><span class='text-[9px] md:text-xs text-slate-400 font-normal'>ID: ${h.accountId}</span></div><span class='px-2 py-0.5 rounded-md text-[11px] md:text-sm font-mono ${dues > 0 ? "bg-rose-50 text-rose-600 font-black" : "bg-emerald-50 text-emerald-600"}'>₹${dues}</span>`;
+                    
+                    rowBtn.onclick = () => {
+                        if (window.innerWidth < 768) {
+                            document.getElementById('roster-sidebar-col').classList.add('hidden');
+                            document.getElementById('roster-desk-col').classList.remove('hidden');
+                            document.getElementById('roster-desk-col').classList.add('block');
+                        }
+                        activatePaymentDeskDrawerForHolder(d.id, h);
+                    };
                     targetDiv.appendChild(rowBtn);
                 });
             } catch(e){}
@@ -721,9 +1365,11 @@
                 
                 runningTotalDuesSum += monthNetDues;
 
+                let completedTripsOnly = (monthRecord.trips || []).filter(t => !t.isDraft);
+
                 structuredMonthArray.push({
                     month: m,
-                    trips: monthRecord.trips || [],
+                    trips: completedTripsOnly,
                     currentMonthBilled: currentMonthBilled,
                     paid: currentMonthPaid,
                     concession: currentMonthConcession,
@@ -749,9 +1395,9 @@
             let analytics = evaluateIsolatedBalanceMatrix(data);
             const badgeContainer = document.getElementById('desk-holder-highlight-badge');
             if(analytics.netGlobalDues > 0) {
-                badgeContainer.innerHTML = `<span class="bg-rose-600 text-white font-black text-[10px] uppercase px-2 py-0.5 rounded shadow-sm">🚨 Dues: ₹${Math.round(analytics.netGlobalDues)}</span>`;
+                badgeContainer.innerHTML = `<span class="bg-rose-600 text-white font-black text-[10px] md:text-xs uppercase px-2 py-0.5 rounded shadow-sm">🚨 Dues: ₹${Math.round(analytics.netGlobalDues)}</span>`;
             } else {
-                badgeContainer.innerHTML = `<span class="bg-emerald-600 text-white font-black text-[10px] uppercase px-2 py-0.5 rounded shadow-sm">✅ Clear</span>`;
+                badgeContainer.innerHTML = `<span class="bg-emerald-600 text-white font-black text-[10px] md:text-xs uppercase px-2 py-0.5 rounded shadow-sm">✅ Clear</span>`;
             }
 
             renderDeskDeskStatementTableMatrix();
@@ -765,14 +1411,14 @@
             analytics.monthSegments.forEach(seg => {
                 if(seg.finalClosingDues > 0) {
                     const row = document.createElement('tr');
-                    row.className = "bg-white text-[11px]";
+                    row.className = "bg-white text-[11px] md:text-sm";
                     row.innerHTML = `
-                        <td class="p-2.5 font-black text-slate-900 pl-3">📅 ${seg.month}</td>
-                        <td class="p-2.5 text-right font-mono font-bold text-slate-600">₹${Math.round(seg.currentMonthBilled)}</td>
-                        <td class="p-2.5 text-right text-emerald-700 font-mono">₹${Math.round(seg.paid)}</td>
-                        <td class="p-2.5 text-right font-mono text-rose-600 font-black">₹${Math.round(seg.finalClosingDues)}</td>
-                        <td class="p-1.5 text-center pr-2">
-                            <button class="bg-cyan-950 hover:bg-black text-white font-bold px-2 py-1 rounded text-[9px] tracking-tight cursor-pointer shadow-sm">
+                        <td class="p-2.5 md:p-4 font-black text-slate-900 pl-3">📅 ${seg.month}</td>
+                        <td class="p-2.5 md:p-4 text-right font-mono font-bold text-slate-600">₹${Math.round(seg.currentMonthBilled)}</td>
+                        <td class="p-2.5 md:p-4 text-right text-emerald-700 font-mono">₹${Math.round(seg.paid)}</td>
+                        <td class="p-2.5 md:p-4 text-right font-mono text-rose-600 font-black">₹${Math.round(seg.finalClosingDues)}</td>
+                        <td class="p-1.5 md:p-3 text-center pr-2">
+                            <button class="bg-cyan-950 hover:bg-black text-white font-bold px-2 py-1.5 rounded text-[9px] md:text-xs tracking-tight cursor-pointer shadow-sm">
                                 📄 Pop Receipt
                             </button>
                         </td>
@@ -794,49 +1440,42 @@
             let itemsRowsHTML = "";
             if(monthSegment.trips && monthSegment.trips.length > 0) {
                 monthSegment.trips.forEach((t, idx) => {
-                    itemsRowsHTML += `<tr><td>${idx+1}. Trip (${t.date})</td><td style="text-align:right;">₹${Math.round(t.amount)}</td></tr>`;
+                    itemsRowsHTML += `<tr><td style="padding: 3px 0;">${idx+1}. Trip (${t.date})</td><td style="text-align:right;">₹${Math.round(t.amount)}</td></tr>`;
                 });
             } else {
                 itemsRowsHTML = `<tr><td colspan="2" style="color:gray; font-style:italic;">No custom logs found</td></tr>`;
             }
 
             let receiptHTML = `
-                <div style="text-align:center; font-weight:bold; border-bottom:1px dashed black; padding-bottom:6px; margin-bottom:6px;">
-                    <p style="font-size:13px; letter-spacing:1px;">AQUAFLOW WATER SUPPLY</p>
-                    <p style="font-size:9px;">Shekhpur Daud, Azamgarh</p>
+                <div style="text-align:center; font-weight:bold; border-bottom:1px dashed black; padding-bottom:8px; margin-bottom:8px;">
+                    <p style="font-size:15px; letter-spacing:1px; margin:0;">AQUAFLOW WATER SUPPLY</p>
+                    <p style="font-size:10px; margin:2px 0 0 0;">Shekhpur Daud, Azamgarh</p>
                 </div>
-                <div style="margin-bottom:6px; font-size:10px; line-height:1.3;">
-                    <p><b>Date:</b> ${dateString} | ${timeString}</p>
-                    <p><b>Account:</b> ${holderObj.name}</p>
-                    <p><b>ID Ref:</b> ${holderObj.accountId}</p>
-                    <p><b>Target Month:</b> ${monthSegment.month}</p>
+                <div style="margin-bottom:8px; font-size:11px; line-height:1.4;">
+                    <p style="margin:2px 0;"><b>Date:</b> ${dateString} | ${timeString}</p>
+                    <p style="margin:2px 0;"><b>Account:</b> ${holderObj.name}</p>
+                    <p style="margin:2px 0;"><b>ID Ref:</b> ${holderObj.accountId}</p>
+                    <p style="margin:2px 0;"><b>Target Month:</b> ${monthSegment.month}</p>
                 </div>
                 
-                <table style="width:100%; font-size:9px; border-top:1px dashed black; margin-top:4px; font-family:monospace;">
-                    <thead><tr style="text-align:left;"><th>Trip Breakdown (Date + Year)</th><th style="text-align:right;">Amt</th></tr></thead>
+                <table style="width:100%; font-size:11px; border-top:1px dashed black; margin-top:6px; font-family:monospace;">
+                    <thead><tr style="text-align:left;"><th style="padding-bottom:4px;">Trip Breakdown</th><th style="text-align:right; padding-bottom:4px;">Amt</th></tr></thead>
                     <tbody>${itemsRowsHTML}</tbody>
                 </table>
 
-                <table style="width:100%; font-size:10px; border-top:1px dashed black; border-bottom:1px dashed black; margin:6px 0; padding:4px 0;">
+                <table style="width:100%; font-size:11px; border-top:1px dashed black; border-bottom:1px dashed black; margin:6px 0; padding:4px 0; line-height:1.4;">
                     <tr style="font-family:sans-serif;"><td>Prev. Outstanding Balance</td><td style="text-align:right;">₹${Math.round(monthSegment.prevDue)}</td></tr>
                     <tr style="font-family:sans-serif;"><td>Current Month Billed</td><td style="text-align:right;">₹${Math.round(monthSegment.currentMonthBilled)}</td></tr>
                     <tr style="font-family:sans-serif;"><td>Total Paid Cleared</td><td style="text-align:right; color:green;">₹${Math.round(monthSegment.paid)}</td></tr>
                 </table>
-                <div style="text-align:right; font-size:11px; font-weight:bold; margin-top:4px; color:#b91c1c;">
+                <div style="text-align:right; font-size:13px; font-weight:bold; margin-top:6px; color:#b91c1c;">
                     Net Remaining Due: ₹${Math.round(monthSegment.finalClosingDues)}
                 </div>
-                <div style="text-align:center; font-size:8px; margin-top:15px; border-top:1px dashed #000; padding-top:4px;">
+                <div style="text-align:center; font-size:9px; margin-top:20px; border-top:1px dashed #000; padding-top:6px; color:#555;">
                     Report generated via AquaFlow System
                 </div>
             `;
             
-            // SIDE INJECT LOGIC
-            document.getElementById('desk-receipt-embed-container').innerHTML = receiptHTML;
-            document.getElementById('desk-receipt-embed-container').classList.remove('hidden');
-            document.getElementById('desk-live-receipt-placeholder').classList.add('hidden');
-            document.getElementById('desk-receipt-print-btn').classList.remove('hidden');
-
-            // PORTAL POPUP NODE UPDATE
             document.getElementById('global-print-receipt-node').innerHTML = receiptHTML;
             openWidgetBox('receiptPopupModal'); 
         }
@@ -887,7 +1526,15 @@
                     }
                 }
 
-                await updateDoc(docRef, { monthlyLedger: ledger });
+                let history = activeDeskHolderData.paymentHistory || [];
+                history.push({
+                    date: new Date().toLocaleDateString('en-GB'),
+                    amountPaid: netPaid,
+                    concession: concession,
+                    timestamp: Date.now()
+                });
+
+                await updateDoc(docRef, { monthlyLedger: ledger, paymentHistory: history });
                 const freshSnap = await getDoc(docRef);
                 
                 if(freshSnap.exists()) {
@@ -908,24 +1555,24 @@
 
             let receiptHTML = `
                 <div style="text-align:center; font-weight:bold; border-bottom:1px dashed black; padding-bottom:6px; margin-bottom:6px;">
-                    <p style="font-size:13px; letter-spacing:1px;">PAYMENT ACKNOWLEDGEMENT</p>
-                    <p style="font-size:9px;">Shekhpur Daud, Azamgarh</p>
+                    <p style="font-size:14px; letter-spacing:1px; margin:0;">PAYMENT ACKNOWLEDGEMENT</p>
+                    <p style="font-size:10px; margin:2px 0 0 0;">Shekhpur Daud, Azamgarh</p>
                 </div>
-                <div style="margin-bottom:6px; font-size:10px; text-align:left; line-height:1.4;">
-                    <p><b>Date/Time:</b> ${dateString} | ${timeString}</p>
-                    <p><b>Holder Name:</b> ${holder.name}</p>
-                    <p><b>Account UID:</b> ${holder.accountId}</p>
+                <div style="margin-bottom:8px; font-size:11px; text-align:left; line-height:1.4;">
+                    <p style="margin:2px 0;"><b>Date/Time:</b> ${dateString} | ${timeString}</p>
+                    <p style="margin:2px 0;"><b>Holder Name:</b> ${holder.name}</p>
+                    <p style="margin:2px 0;"><b>Account UID:</b> ${holder.accountId}</p>
                 </div>
-                <table style="width:100%; font-size:10px; border-top:1px dashed black; border-bottom:1px dashed black; margin:6px 0; padding:4px 0;">
+                <table style="width:100%; font-size:11px; border-top:1px dashed black; border-bottom:1px dashed black; margin:6px 0; padding:4px 0;">
                     <tr><td><b>Particular Details</b></td><td style="text-align:right;"><b>Amount</b></td></tr>
                     <tr style="font-family:sans-serif;"><td style="padding-top:4px;">Collected Paid Amount</td><td style="text-align:right; font-weight:bold;">₹${Math.round(recAmt)}</td></tr>
                     ${disc > 0 ? `<tr style="font-family:sans-serif;"><td>Discount Availed</td><td style="text-align:right; font-weight:bold;">₹${Math.round(disc)}</td></tr>` : ''}
                 </table>
-                <div style="text-align:right; font-size:10px; font-weight:bold; margin-top:4px;">
-                    <p>Net Liquidated Sum: ₹${Math.round(recAmt + disc)}</p>
-                    <p style="color:#b91c1c;">Total Left Outstanding: ₹${Math.round(evaluateIsolatedBalanceMatrix(holder).netGlobalDues)}</p>
+                <div style="text-align:right; font-size:12px; font-weight:bold; margin-top:6px; line-height:1.4;">
+                    <p style="margin:2px 0;">Net Liquidated Sum: ₹${Math.round(recAmt + disc)}</p>
+                    <p style="color:#b91c1c; margin:2px 0;">Total Left Outstanding: ₹${Math.round(evaluateIsolatedBalanceMatrix(holder).netGlobalDues)}</p>
                 </div>
-                <div style="text-align:center; font-size:8px; margin-top:15px; border-top:1px dashed #000; padding-top:4px;">
+                <div style="text-align:center; font-size:9px; margin-top:20px; border-top:1px dashed #000; padding-top:6px; color:#555;">
                     Payment Captured Safely! Thank You!
                 </div>
             `;
@@ -940,7 +1587,7 @@
 
             if(!targetDocId) { outBox.innerHTML = ""; outBox.classList.add('hidden'); return; }
 
-            outBox.innerHTML = "<div class='text-center text-xs py-4'>Matrix Loading...</div>";
+            outBox.innerHTML = "<div class='text-center text-xs md:text-sm py-4'>Matrix Loading...</div>";
             outBox.classList.remove('hidden');
 
             try {
@@ -956,21 +1603,14 @@
 
                 let monthlyMatrixRows = "";
                 targetSegmentsToRender.forEach(seg => {
-                    let statusBadge = `<span class="bg-rose-100 text-rose-800 text-[10px] font-black px-1.5 py-0.5 rounded">Pending</span><div class="text-xs font-mono font-black text-rose-600 mt-0.5">₹${Math.round(seg.finalClosingDues)}</div>`;
+                    let statusBadge = `<span class="bg-rose-100 text-rose-800 text-[10px] md:text-xs font-black px-1.5 py-0.5 rounded">Pending</span><div class="text-xs md:text-base font-mono font-black text-rose-600 mt-0.5">₹${Math.round(seg.finalClosingDues)}</div>`;
 
                     let inlineLogsBreakdown = "";
                     if(seg.trips && seg.trips.length > 0) {
                         seg.trips.forEach((t, i) => {
                             let cleanTripDate = t.date;
-                            if(cleanTripDate.includes('/') && cleanTripDate.split('/').length === 3) {
-                                let parts = cleanTripDate.split('/');
-                                cleanTripDate = `${parts[0]}/${parts[1]}/${parts[2]}`;
-                            } else if (!cleanTripDate.includes('2025') && !cleanTripDate.includes('2026')) {
-                                cleanTripDate = `${cleanTripDate}/2026`;
-                            }
-                            
                             inlineLogsBreakdown += `
-                                <div class="flex justify-between items-center bg-slate-50 border-b p-1.5 text-[10px]">
+                                <div class="flex justify-between items-center bg-slate-50 border-b p-1.5 text-[10px] md:text-xs">
                                     <span class="text-slate-600 font-bold">${i+1}. Trip (${cleanTripDate}):</span>
                                     <span class="font-mono font-black text-slate-900">₹${t.amount}</span>
                                 </div>
@@ -979,21 +1619,21 @@
                     }
 
                     monthlyMatrixRows += `
-                        <tr class="border-b text-slate-700 bg-white text-xs align-top">
-                            <td class="p-2 pl-3">
-                                <div class="font-black text-slate-900">📅 ${seg.month}</div>
-                                <div class="text-[9px] text-slate-400 mt-0.5 font-bold">Prev. Due: ₹${seg.prevDue}</div>
+                        <tr class="border-b text-slate-700 bg-white text-xs md:text-sm align-top">
+                            <td class="p-2 md:p-3.5 pl-3">
+                                <div class="font-black text-slate-900 md:text-base">📅 ${seg.month}</div>
+                                <div class="text-[9px] md:text-xs text-slate-400 mt-0.5 font-bold">Prev. Due: ₹${seg.prevDue}</div>
                                 <div class="mt-2 space-y-0.5 bg-slate-100/60 p-1 rounded border border-dashed text-left w-full block">
-                                    <div class="text-[9px] font-bold text-slate-400 uppercase tracking-tight border-b pb-0.5 mb-1">Trip Logs Matrix:</div>
-                                    ${inlineLogsBreakdown || '<div class="text-[9px] text-slate-400 italic">No manual trips</div>'}
+                                    <div class="text-[9px] md:text-xs font-bold text-slate-400 uppercase tracking-tight border-b pb-0.5 mb-1">Trip Logs Matrix:</div>
+                                    ${inlineLogsBreakdown || '<div class="text-[9px] md:text-xs text-slate-400 italic">No manual trips</div>'}
                                 </div>
                             </td>
-                            <td class="p-2 text-right font-mono font-bold pt-3 text-slate-800">
+                            <td class="p-2 md:p-3.5 text-right font-mono font-bold pt-3 text-slate-800 md:text-base">
                                 <div>₹${Math.round(seg.currentMonthBilled)}</div>
-                                <div class="text-[9px] text-indigo-600 font-black block mt-1">Total: ₹${Math.round(seg.currentMonthBilled + seg.prevDue)}</div>
+                                <div class="text-[9px] md:text-xs text-indigo-600 font-black block mt-1">Total: ₹${Math.round(seg.currentMonthBilled + seg.prevDue)}</div>
                             </td>
-                            <td class="p-2 text-right text-emerald-700 font-mono pt-3">₹${Math.round(seg.paid)}</td>
-                            <td class="p-2 text-right pr-3 pt-3">${statusBadge}</td>
+                            <td class="p-2 md:p-3.5 text-right text-emerald-700 font-mono pt-3 md:text-base">₹${Math.round(seg.paid)}</td>
+                            <td class="p-2 md:p-3.5 text-right pr-3 pt-3">${statusBadge}</td>
                         </tr>
                     `;
                 });
@@ -1005,23 +1645,16 @@
                     if(seg.trips && seg.trips.length > 0) {
                         seg.trips.forEach(t => {
                             let itemTripDate = t.date;
-                            if(itemTripDate.includes('/') && itemTripDate.split('/').length === 3) {
-                                let parts = itemTripDate.split('/');
-                                itemTripDate = `${parts[0]}/${parts[1]}/${parts[2]}`;
-                            } else if (!itemTripDate.includes('2025') && !itemTripDate.includes('2026')) {
-                                itemTripDate = `${itemTripDate}/2026`;
-                            }
-
                             transactionHistoryItems += `
-                                <div class="p-3 bg-slate-50 border rounded-md text-[11px] flex justify-between items-center mb-1 text-left">
+                                <div class="p-3 bg-slate-50 border rounded-md text-[11px] md:text-sm flex justify-between items-center mb-1 text-left">
                                     <div>
-                                        <span class="font-black text-slate-800">${itemIndex++}. ${seg.month} Log Entry</span>
-                                        <span class="block text-[9px] text-slate-400 font-mono">Full Date: ${itemTripDate} (${t.day})</span>
-                                        <span class="block text-[9px] text-indigo-600 font-semibold">Duration: ${t.duration}</span>
+                                        <span class="font-black text-slate-800 md:text-base">${itemIndex++}. ${seg.month} Log Entry</span>
+                                        <span class="block text-[9px] md:text-xs text-slate-400 font-mono">Full Date: ${itemTripDate} (${t.day})</span>
+                                        <span class="block text-[9px] md:text-xs text-indigo-600 font-semibold">Duration: ${t.duration}</span>
                                     </div>
                                     <div class="text-right">
-                                        <span class="font-mono text-slate-900 font-black block">₹${Math.round(t.amount)}</span>
-                                        ${isPaid ? '<span class="inline-block bg-emerald-100 text-emerald-800 text-[8px] px-1 rounded font-bold">PAID ✅</span>' : '<span class="inline-block bg-amber-100 text-amber-800 text-[8px] px-1 rounded font-bold">UNPAID</span>'}
+                                        <span class="font-mono text-slate-900 font-black block md:text-base">₹${Math.round(t.amount)}</span>
+                                        ${isPaid ? '<span class="inline-block bg-emerald-100 text-emerald-800 text-[8px] md:text-xs px-1 rounded font-bold">PAID ✅</span>' : '<span class="inline-block bg-amber-100 text-amber-800 text-[8px] md:text-xs px-1 rounded font-bold">UNPAID</span>'}
                                     </div>
                                 </div>
                             `;
@@ -1029,45 +1662,45 @@
                     }
                 });
 
-                window.cachedPopUpHistoryHTML = transactionHistoryItems || '<div class="text-[10px] text-slate-400 italic text-center py-4">No individual historical logs found.</div>';
+                window.cachedPopUpHistoryHTML = transactionHistoryItems || '<div class="text-[10px] md:text-xs text-slate-400 italic text-center py-4">No individual historical logs found.</div>';
 
                 let nameHighlightBadgeHTML = "";
                 if(analytics.netGlobalDues > 0) {
-                    nameHighlightBadgeHTML = `<span class="inline-block ml-2 bg-red-600 text-white font-black text-[10px] px-2 py-0.5 rounded tracking-wide uppercase shadow-sm animate-pulse">Dues: ₹${Math.round(analytics.netGlobalDues)}</span>`;
+                    nameHighlightBadgeHTML = `<span class="inline-block ml-2 bg-red-600 text-white font-black text-[10px] md:text-xs px-2 py-0.5 rounded tracking-wide uppercase shadow-sm animate-pulse">Dues: ₹${Math.round(analytics.netGlobalDues)}</span>`;
                 } else {
-                    nameHighlightBadgeHTML = `<span class="inline-block ml-2 bg-emerald-600 text-white font-black text-[10px] px-2 py-0.5 rounded tracking-wide uppercase shadow-sm">Clear</span>`;
+                    nameHighlightBadgeHTML = `<span class="inline-block ml-2 bg-emerald-600 text-white font-black text-[10px] md:text-xs px-2 py-0.5 rounded tracking-wide uppercase shadow-sm">Clear</span>`;
                 }
 
                 outBox.innerHTML = `
-                    <div class="p-3 bg-white rounded-xl border space-y-3 text-left animate-fade-in shadow-sm w-full overflow-hidden">
+                    <div class="p-3 md:p-5 bg-white rounded-xl border space-y-3 text-left animate-fade-in shadow-sm w-full overflow-hidden">
                         <div class="border-b pb-2 flex items-center flex-wrap gap-1">
-                            <h4 class="font-black text-xs text-slate-900">👤 Holder: ${h.name}</h4>
+                            <h4 class="font-black text-xs md:text-base text-slate-900">👤 Holder: ${h.name}</h4>
                             ${nameHighlightBadgeHTML}
                         </div>
-                        <p class="text-[9px] text-slate-400 font-mono -mt-1">UID: ${h.accountId} | Mob: ${h.mobile}</p>
+                        <p class="text-[9px] md:text-xs text-slate-400 font-mono -mt-1">UID: ${h.accountId} | Mob: ${h.mobile}</p>
                         
                         ${targetSegmentsToRender.length > 0 ? `
                         <div class="overflow-x-auto rounded-lg border w-full">
-                            <table class="w-full text-left text-xs min-w-[290px] table-auto">
-                                <thead class="bg-slate-800 text-white text-[9px] uppercase">
-                                    <tr><th class="p-2 pl-3">Month Summary / Calc</th><th class="p-2 text-right">Bill Details</th><th class="p-2 text-right">Paid</th><th class="p-2 text-right pr-3">Status</th></tr>
+                            <table class="w-full text-left text-xs md:text-sm min-w-[290px] table-auto">
+                                <thead class="bg-slate-800 text-white text-[9px] md:text-xs uppercase">
+                                    <tr><th class="p-2 md:p-3 pl-3">Month Summary / Calc</th><th class="p-2 md:p-3 text-right">Bill Details</th><th class="p-2 md:p-3 text-right">Paid</th><th class="p-2 md:p-3 text-right pr-3">Status</th></tr>
                                 </thead>
                                 <tbody class="divide-y divide-slate-200">${monthlyMatrixRows}</tbody>
                             </table>
                         </div>
                         ` : `
-                        <div class="p-4 bg-emerald-50 text-emerald-800 font-bold text-xs text-center border border-dashed border-emerald-300 rounded-lg">
+                        <div class="p-4 bg-emerald-50 text-emerald-800 font-bold text-xs md:text-sm text-center border border-dashed border-emerald-300 rounded-lg">
                             🎉 Sabhi months cleared hain! Koi dues baaki nahi hai.
                         </div>
                         `}
 
-                        <div class="p-3 bg-slate-900 text-white rounded-lg text-xs font-black text-center font-mono tracking-wide uppercase">
-                            TOTAL OUTSTANDING DUE (कुल बकाया राशि): ₹${Math.round(analytics.netGlobalDues)}
+                        <div class="p-3 bg-slate-900 text-white rounded-lg text-xs md:text-base font-black text-center font-mono tracking-wide uppercase">
+                            TOTAL OUTSTANDING DUE: ₹${Math.round(analytics.netGlobalDues)}
                         </div>
                         
                         <div class="border-t pt-2">
-                            <button onclick="triggerHistoryLogsPopupDisplayModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-black py-2.5 rounded-lg text-[11px] text-center border cursor-pointer">
-                                📜 View Complete Trip Logs & Payment History (Pop-up View)
+                            <button onclick="triggerHistoryLogsPopupDisplayModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-black py-2.5 rounded-lg text-[11px] md:text-xs text-center border cursor-pointer">
+                                📜 View Complete Trip Logs & Payment History
                             </button>
                         </div>
                     </div>
@@ -1085,5 +1718,3 @@
     </script>
 </body>
 </html>
-
-                
