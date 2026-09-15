@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://super-web755.github.io/Bill.Show.Portal/sitemap.xml
