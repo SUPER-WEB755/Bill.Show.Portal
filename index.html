@@ -733,6 +733,35 @@
         .af-confirm-actions button{min-height:46px;border:0;border-radius:13px;font-size:13px;font-weight:1000;cursor:pointer}
         .af-confirm-cancel{background:#f1f5f9;color:#475569}
         .af-confirm-ok{background:linear-gradient(135deg,#047857,#10b981);color:#fff;box-shadow:0 8px 18px rgba(5,150,105,.22)}
+
+        /* Final payment save loader - shared by Admin + Client payment workflow */
+        .af-final-payment-loader{
+            width:24px;height:24px;border:3px solid rgba(255,255,255,.35);
+            border-top-color:#fff;border-radius:50%;display:inline-block;
+            animation:afFinalPaymentSpin .75s linear infinite;flex:0 0 auto;
+        }
+        @keyframes afFinalPaymentSpin{to{transform:rotate(360deg)}}
+        /* Large full-screen processing state shown immediately after FINAL
+           Confirm & Continue. Shared by Admin + Client payment workflow. */
+        .af-payment-processing-card{
+            width:min(430px,88vw);min-height:260px;box-sizing:border-box;
+            background:#fff;border-radius:30px;padding:34px 28px;
+            display:none;align-items:center;justify-content:center;flex-direction:column;
+            text-align:center;box-shadow:0 30px 90px rgba(0,0,0,.38);
+            border:1px solid #e2e8f0;
+        }
+        .af-payment-processing-spinner{
+            width:112px;height:112px;border:12px solid #d1fae5;
+            border-top-color:#10b981;border-right-color:#047857;
+            border-radius:50%;display:block;
+            animation:afFinalPaymentSpin .72s linear infinite;
+            box-sizing:border-box;margin-bottom:24px;
+            filter:drop-shadow(0 12px 22px rgba(5,150,105,.22));
+        }
+        .af-payment-processing-card h3{margin:0;font-size:25px;font-weight:1000;color:#047857}
+        .af-payment-processing-card p{margin:9px 0 0;font-size:13px;line-height:1.6;color:#64748b;font-weight:800}
+        .af-confirm-ok.af-payment-processing{pointer-events:none!important;cursor:wait!important;opacity:.92!important;transform:none!important;}
+        .af-confirm-card.af-payment-processing-card{pointer-events:none;}
         .af-success-card{width:min(480px,94vw);background:#fff;border-radius:28px;padding:30px 25px;text-align:center;box-shadow:0 30px 90px rgba(0,0,0,.35);animation:afConfirmIn .25s ease-out}
         .af-success-icon{width:82px;height:82px;border-radius:50%;margin:0 auto 14px;background:linear-gradient(135deg,#10b981,#047857);color:#fff;font-size:48px;display:flex;align-items:center;justify-content:center;box-shadow:0 15px 30px rgba(5,150,105,.25)}
         .af-success-card h3{font-size:25px;font-weight:1000;color:#047857;margin:0}
@@ -1828,9 +1857,7 @@
                 <h2>DIGITAL WATER<br><span>SUPPLY PORTAL</span></h2>
                 <div class="af-location">Shekhpur Daud, Azamgarh</div>
                 <p class="af-hero-copy">
-                    Ab aapke paani ka bill online, aasaan aur surakshit bhi.
-                    Motor water billing system ke madhyam se aap apna bill,
-                    payment aur history kabhi bhi, kahin bhi check kar sakte hain.
+                    अब आपके पानी का बिल ऑनलाइन, आसान और सुरक्षित भी!मोटर वाटर बिलिंग सिस्टम (Motor Water Billing System) के माध्यम से आप अपना बिल, पेमेंट (भुगतान) और हिस्ट्री (इतिहास) कभी भी, कहीं भी चेक कर सकते हैं। .
                 </p>
                 <div class="af-actions">
                     <button class="af-primary" onclick="openCustomerBillWidget()">🔍 Apna Bill Check Karen <span class="af-arrow-move">→</span></button>
@@ -6127,11 +6154,53 @@ If you did not request this, please ignore this email.`});
         }
 
         window.afResolvePaymentConfirmation = function(result) {
-            document.getElementById('af-payment-confirm-overlay').style.display = 'none';
+            const overlay = document.getElementById('af-payment-confirm-overlay');
+            const confirmCard = document.getElementById('af-payment-confirm-card');
+            const processingCard = document.getElementById('af-payment-processing-card');
+            const okBtn = confirmCard?.querySelector('.af-confirm-ok');
+            const isFinalConfirmation = (document.getElementById('af-confirm-title')?.textContent || '').trim() === 'Final Payment Confirmation';
+
+            // FINAL confirmation: immediately replace the confirmation popup with a
+            // large, continuously rotating loader. The popup stays locked until the
+            // real payment save/update flow finishes. Shared by Admin + Client.
+            if(result && isFinalConfirmation) {
+                if(okBtn) {
+                    okBtn.disabled = true;
+                    okBtn.classList.add('af-payment-processing');
+                    okBtn.innerHTML = '<span class="af-final-payment-loader" aria-hidden="true"></span><span>Processing Payment...</span>';
+                }
+                if(confirmCard) confirmCard.style.display = 'none';
+                if(processingCard) processingCard.style.display = 'flex';
+                overlay.style.display = 'flex';
+                overlay.style.zIndex = '2147483647';
+                overlay.style.visibility = 'visible';
+                overlay.style.opacity = '1';
+                overlay.style.pointerEvents = 'auto';
+            } else {
+                if(processingCard) processingCard.style.display = 'none';
+                overlay.style.display = 'none';
+            }
+
             if(afPaymentConfirmResolver) {
                 const resolve = afPaymentConfirmResolver;
                 afPaymentConfirmResolver = null;
                 resolve(result);
+            }
+        }
+
+        window.afResetPaymentProcessingUI = function() {
+            const confirmCard = document.getElementById('af-payment-confirm-card');
+            const processingCard = document.getElementById('af-payment-processing-card');
+            const okBtn = confirmCard?.querySelector('.af-confirm-ok');
+            if(processingCard) processingCard.style.display = 'none';
+            if(confirmCard) {
+                confirmCard.classList.remove('af-payment-processing-card');
+                confirmCard.style.display = 'block';
+            }
+            if(okBtn) {
+                okBtn.disabled = false;
+                okBtn.classList.remove('af-payment-processing');
+                okBtn.innerHTML = '✓ Confirm & Continue';
             }
         }
 
@@ -6142,6 +6211,7 @@ If you did not request this, please ignore this email.`});
 
         window.afShowPaymentSuccess = function(amount, holderName, mode) {
             const overlay = document.getElementById('af-payment-confirm-overlay');
+            document.getElementById('af-payment-processing-card').style.display = 'none';
             document.getElementById('af-payment-confirm-card').style.display = 'none';
             document.getElementById('af-payment-success-card').style.display = 'block';
             document.getElementById('af-success-amount').textContent = `₹${Math.round(amount)}`;
@@ -6282,6 +6352,7 @@ If you did not request this, please ignore this email.`});
                 await calculateGlobalFinancialRevenueDashboard();
                 activatePaymentDeskDrawerForHolder(activeDeskHolderId, updatedData);
 
+                afResetPaymentProcessingUI();
                 afShowPaymentSuccess(netPaid, holderName, paymentMode);
                 const emailLine = paymentEmailResult.ok
                     ? '<br><span style="color:#047857;font-weight:1000">📧 Payment message sent to registered Gmail.</span>'
@@ -6305,6 +6376,8 @@ If you did not request this, please ignore this email.`});
                 selectPaymentMode('cash');
             } catch(e) {
                 console.error('Payment save failed:', e);
+                afResetPaymentProcessingUI();
+                document.getElementById('af-payment-confirm-overlay').style.display='none';
                 const code = e?.code ? ` (${e.code})` : '';
                 const msg = e?.message || 'Unknown error';
                 renderAlertModalNotification(`<span class='text-rose-600 font-black'>❌ Payment save nahi ho saka.</span><br><span class='text-slate-600 font-bold'>Please try again.${code}</span>`);
@@ -6910,11 +6983,37 @@ If you did not request this, please ignore this email.`});
         window.verifyClientLogin = async function(){
             const identifier=document.getElementById('client-login-identifier').value.trim().toLowerCase();
             const password=document.getElementById('client-login-password').value;
-            if(!identifier||!password){ renderAlertModalNotification("<span class='text-rose-600 font-black'>⚠️ Client ID / Username / Full Name aur password enter karein.</span>"); return; }
+            if(!identifier||!password){ renderAlertModalNotification("<span class='text-rose-600 font-black'>⚠️ Client ID / Username / Full Name aur password enter karein.<br><span style=\"color:#334155\">कृपया Client ID / Username / Full Name और Password दर्ज करें।</span></span>"); return; }
             try{
-                const snap=await getDocs(collection(db,'client_access')); let match=null;
-                snap.forEach(d=>{const c=d.data(); if(!match && c.active!==false && [c.clientId,c.username,c.email,c.name].filter(Boolean).some(v=>String(v).toLowerCase()===identifier)) match={id:d.id,...c};});
-                if(!match || (await sha256Text(password))!==match.passwordHash){ renderAlertModalNotification("<span class='text-rose-600 font-black'>❌ Incorrect Client Login.</span>"); return; }
+                const snap=await getDocs(collection(db,'client_access')); let match=null; let inactiveMatch=null;
+                snap.forEach(d=>{
+                    const c=d.data();
+                    const sameIdentifier=[c.clientId,c.username,c.email,c.name].filter(Boolean).some(v=>String(v).toLowerCase()===identifier);
+                    if(!sameIdentifier) return;
+                    if(c.active===false){ if(!inactiveMatch) inactiveMatch={id:d.id,...c}; }
+                    else if(!match){ match={id:d.id,...c}; }
+                });
+
+                // If the entered Client ID/account exists but has been deactivated,
+                // show a clear bilingual alert immediately instead of saying "Incorrect Login".
+                if(!match && inactiveMatch){
+                    const inactiveId=inactiveMatch.clientId || identifier;
+                    renderAlertModalNotification(`
+                        <div style=\"text-align:center;padding:8px 4px\">
+                            <div style=\"font-size:54px;line-height:1\">🔒</div>
+                            <div style=\"font-size:22px;font-weight:950;color:#b91c1c;margin-top:10px\">CLIENT ID DEACTIVATED</div>
+                            <div style=\"font-size:17px;font-weight:900;color:#172554;margin-top:8px\">यह Client ID निष्क्रिय (Deactivated) है।</div>
+                            <div style=\"font-size:14px;font-weight:800;color:#475569;margin-top:8px;line-height:1.6\">Client ID <b>${inactiveId}</b> से Login अभी उपलब्ध नहीं है।</div>
+                            <div style=\"font-size:14px;font-weight:800;color:#475569;margin-top:4px;line-height:1.6\">This Client ID is currently deactivated, so login is not available.</div>
+                            <div style=\"font-size:13px;font-weight:850;color:#075985;background:#e0f2fe;border-radius:12px;padding:10px;margin-top:12px\">📞 कृपया Official/Water Department से संपर्क करके Client ID activate करवाएँ।<br>Please contact the Official/Water Department to activate your Client ID.</div>
+                        </div>`);
+                    return;
+                }
+
+                if(!match || (await sha256Text(password))!==match.passwordHash){
+                    renderAlertModalNotification("<span class='text-rose-600 font-black'>❌ Incorrect Client Login.<br><span style=\"color:#334155\">गलत Client ID / Username / Full Name या Password.</span></span>");
+                    return;
+                }
                 activeClientAuthorized=true; activeClientHolderId=null; activeClientHolderData=null; window.activeClientAccessRecord=match;
                 closeClientLoginPanel();
                 document.getElementById('client-dashboard-name').textContent=match.name||'Client';
@@ -7014,6 +7113,11 @@ If you did not request this, please ignore this email.`});
                 <button class="af-confirm-cancel" onclick="afResolvePaymentConfirmation(false)">✕ Cancel</button>
                 <button class="af-confirm-ok" onclick="afResolvePaymentConfirmation(true)">✓ Confirm & Continue</button>
             </div>
+        </div>
+        <div id="af-payment-processing-card" class="af-payment-processing-card" aria-live="polite" aria-busy="true">
+            <span class="af-payment-processing-spinner" aria-hidden="true"></span>
+            <h3>Processing Payment...</h3>
+            <p>Please wait. Payment save ho raha hai.<br>Is screen ko close ya refresh na karein.</p>
         </div>
         <div id="af-payment-success-card" class="af-success-card" style="display:none;">
             <div class="af-success-icon">✓</div>
