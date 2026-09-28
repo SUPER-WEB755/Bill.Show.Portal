@@ -1499,9 +1499,9 @@
     background:rgba(15,23,42,.92) !important;
 }
 #receiptPopupModal > div{
-    width:min(94vw,520px) !important;
-    max-width:520px !important;
-    max-height:94dvh !important;
+    width:min(100vw,980px) !important;
+    max-width:980px !important;
+    max-height:96dvh !important;
     overflow:auto !important;
     margin:0 !important;
 }
@@ -1521,7 +1521,7 @@
     .af-client-id-label{font-size:8px;}
     .af-client-id-block #client-id-reveal-hint{font-size:7px;}
     #receiptPopupModal{padding:8px !important;}
-    #receiptPopupModal > div{width:96vw !important;max-height:96dvh !important;}
+    #receiptPopupModal > div{width:100vw !important;max-width:100vw !important;max-height:98dvh !important;}
 }
 </style>
 
@@ -1827,6 +1827,106 @@
 </style>
 
     <meta name="google-site-verification" content="BsLgYo8m9hd9WtPjbB8_Tny6nWHL-Dr-4EXwK91qnoc" />
+
+<style id="af-receipt-fullscreen-v2">
+#receiptPopupModal{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;max-height:100dvh!important;padding:0!important;margin:0!important;background:#f0f5fc!important;align-items:stretch!important;justify-content:stretch!important;overflow:hidden!important;}
+#receiptPopupModal>div{width:100%!important;max-width:none!important;height:100dvh!important;max-height:100dvh!important;min-height:100dvh!important;border-radius:0!important;border:0!important;margin:0!important;padding:64px clamp(12px,3vw,36px) 90px!important;box-sizing:border-box!important;overflow-y:auto!important;background:linear-gradient(150deg,#eff6ff,#fff)!important;}
+#receiptPopupModal #global-print-receipt-node{max-width:950px!important;width:100%!important;margin:0 auto!important;box-sizing:border-box!important;border:0!important;background:transparent!important;font-family:Arial,sans-serif!important;}
+#receiptPopupModal>div>.no-print:last-child{position:fixed!important;bottom:0!important;left:0!important;right:0!important;margin:0!important;padding:12px!important;background:#fff!important;box-shadow:0 -5px 22px #94a3b866!important;z-index:4!important;}
+#receiptPopupModal>div>button.no-print{position:fixed!important;top:12px!important;right:15px!important;z-index:5!important;background:#0f172a!important;color:#fff!important;border-radius:50%!important;width:44px!important;height:44px!important;}
+@media print{#receiptPopupModal{position:absolute!important;inset:0!important;height:auto!important;overflow:visible!important;background:#fff!important;}#receiptPopupModal>div{height:auto!important;max-height:none!important;overflow:visible!important;padding:0!important;background:#fff!important;}#receiptPopupModal #global-print-receipt-node{max-width:100%!important;}#receiptPopupModal .no-print{display:none!important;}}
+</style>
+
+<style id="af-clear-receipt-keyboard-css">
+/* Fullscreen receipt: no content hidden beneath the fixed action bar. */
+#receiptPopupModal > div {padding-bottom:120px!important;scroll-padding-bottom:120px!important;}
+#receiptPopupModal #global-print-receipt-node{max-width:1040px!important;font-family:Arial,"Noto Sans Devanagari",sans-serif!important;line-height:1.6!important;color:#0f172a!important;}
+#receiptPopupModal .af-month-payment-receipt{padding:clamp(18px,3vw,30px)!important;margin-bottom:24px!important;border:2px solid #cbd5e1!important;box-shadow:0 8px 24px #0f172a18!important;}
+#receiptPopupModal .af-month-payment-receipt p{font-size:clamp(14px,1.25vw,17px)!important;line-height:1.65!important;white-space:normal!important;overflow-wrap:anywhere!important;}
+#receiptPopupModal .af-month-payment-receipt table{width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;font-size:clamp(13px,1.2vw,16px)!important;line-height:1.65!important;}
+#receiptPopupModal .af-month-payment-receipt td,#receiptPopupModal .af-month-payment-receipt th{padding:7px 5px!important;vertical-align:top!important;overflow-wrap:anywhere!important;}
+#receiptPopupModal .af-month-payment-receipt td:first-child,#receiptPopupModal .af-month-payment-receipt th:first-child{width:76%!important;text-align:left!important;}
+#receiptPopupModal .af-month-payment-receipt td:last-child,#receiptPopupModal .af-month-payment-receipt th:last-child{width:24%!important;text-align:right!important;white-space:normal!important;}
+#receiptPopupModal .af-month-payment-receipt > div:last-child{font-size:clamp(12px,1.1vw,15px)!important;line-height:1.7!important;}
+#receiptPopupModal > div > .no-print:last-child{min-height:76px!important;display:flex!important;align-items:center!important;justify-content:center!important;}
+@media(max-width:600px){#receiptPopupModal > div{padding:62px 12px 120px!important;}#receiptPopupModal .af-month-payment-receipt{padding:13px!important;}#receiptPopupModal .af-month-payment-receipt table{font-size:12px!important;}}
+@media print{
+ #receiptPopupModal > div{padding:0!important;overflow:visible!important;}
+ #receiptPopupModal .af-month-payment-receipt{box-shadow:none!important;break-inside:avoid!important;page-break-inside:avoid!important;border:1px solid #aaa!important;}
+ #receiptPopupModal #global-print-receipt-node{max-width:100%!important;}
+ #receiptPopupModal .no-print{display:none!important;}
+}
+</style>
+
+<style id="af-receipt-actions-top-fix">
+/* Keep receipt actions at the very top, never across receipt text. */
+#receiptPopupModal > div {
+  padding-top:100px!important;
+  padding-bottom:28px!important;
+  scroll-padding-top:100px!important;
+  scroll-padding-bottom:28px!important;
+}
+#receiptPopupModal > div > .no-print:last-child {
+  position:fixed!important;top:0!important;bottom:auto!important;left:0!important;right:0!important;
+  z-index:10!important;min-height:72px!important;box-sizing:border-box!important;
+  margin:0!important;padding:12px 64px 12px 12px!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  gap:12px!important;background:#fff!important;box-shadow:0 4px 18px #94a3b866!important;
+}
+#receiptPopupModal > div > button.no-print {
+  position:fixed!important;top:13px!important;right:12px!important;z-index:11!important;
+}
+@media(max-width:600px){
+  #receiptPopupModal > div {padding:92px 10px 20px!important;}
+  #receiptPopupModal > div > .no-print:last-child {min-height:72px!important;padding:10px 58px 10px 8px!important;gap:8px!important;}
+  #receiptPopupModal > div > .no-print:last-child button {font-size:12px!important;padding:10px 12px!important;}
+}
+@media print{
+  #receiptPopupModal > div{padding:0!important;}
+  #receiptPopupModal > div > .no-print:last-child,#receiptPopupModal > div > button.no-print{display:none!important;}
+}
+</style>
+
+<style id="af-colorful-home-redesign-2026">
+/* Home-only colorful redesign; all original button handlers and application screens remain intact. */
+body{background:#f5faff!important}
+.af-topbar{background:linear-gradient(155deg,#f4fbff 0%,#e6f5ff 52%,#fff 100%)!important;color:#123a68!important;overflow:hidden}
+.af-topbar::after{height:260px;bottom:-160px;background:rgba(29,161,242,.09);pointer-events:none}
+.af-nav{max-width:1280px;padding:20px 22px 16px;align-items:flex-start;gap:22px;flex-wrap:wrap}
+.af-brand{min-width:100%;gap:16px;padding:4px 0 15px;border-bottom:1px solid #d3e9f9}
+.af-logo{width:68px;height:68px;border-radius:23px;background:linear-gradient(145deg,#10c8e5,#0871d4);box-shadow:0 10px 24px #1689d430;color:#fff;font-size:37px}
+.af-brand-title{font-size:clamp(29px,4.5vw,44px);color:#10396d;letter-spacing:.4px}
+.af-brand-title span{color:#0e91d9}
+.af-brand-sub{font-size:14px;color:#506579;margin-top:8px}
+.af-menu{width:100%;justify-content:flex-start;gap:10px 12px}
+.af-menu button{font-size:14px!important;min-height:48px;padding:12px 16px!important;border-radius:16px;font-weight:900;box-shadow:0 5px 14px #123a6810;transition:transform .2s,box-shadow .2s;white-space:nowrap}
+.af-menu button:hover{transform:translateY(-2px);box-shadow:0 9px 20px #123a6825}
+.af-menu button:nth-child(1){background:#e9f2ff!important;color:#143d77!important}
+.af-menu button:nth-child(2){background:#e8f8f1!important;color:#087a4b!important}
+.af-menu button:nth-child(3){background:#f1e8ff!important;color:#7022bf!important}
+.af-menu button:nth-child(4){background:#fff2e3!important;color:#b75a0a!important}
+.af-menu button:nth-child(5){background:linear-gradient(135deg,#08a74d,#008f6d)!important;color:#fff!important}
+.af-menu button:nth-child(6){background:linear-gradient(135deg,#8a2be2,#5c1bc0)!important;color:#fff!important}
+.af-menu button:nth-child(7){background:linear-gradient(135deg,#ffb41e,#ff8b0b)!important;color:#fff!important}
+.af-menu button:nth-child(8){background:linear-gradient(135deg,#ff386b,#e91151)!important;color:#fff!important}
+.af-hero{max-width:1280px;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:25px;padding:42px 22px 60px;min-height:480px;align-items:center}
+.af-kicker{font-size:clamp(17px,2vw,24px);color:#164878;font-weight:950;letter-spacing:.1px}
+.af-hero h2{font-size:clamp(41px,5.5vw,78px);line-height:1.08;letter-spacing:-1.6px;color:#112f61;margin:23px 0 19px;text-shadow:none}
+.af-hero h2 span{color:#098de0}
+.af-location{color:#1a4978;font-size:clamp(17px,2.2vw,23px);margin-bottom:24px}
+.af-hero-copy{font-size:clamp(15px,1.55vw,19px);line-height:1.85;color:#24496c;max-width:740px}
+.af-actions{gap:12px;margin-top:32px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.af-actions button{min-height:58px!important;font-size:clamp(12px,1.25vw,17px)!important;padding:14px 15px!important;border:0!important;border-radius:17px!important;box-shadow:0 8px 20px #123a681e!important;white-space:normal;text-align:center}
+.af-actions .af-primary{grid-column:1/-1;max-width:540px;background:linear-gradient(115deg,#1ec0e9,#0875e5)!important;color:#fff!important;text-align:left}
+.af-actions .af-secondary:nth-child(2){background:linear-gradient(115deg,#159c84,#087a74)!important;color:#fff!important}
+.af-actions .af-secondary:nth-child(3){background:linear-gradient(115deg,#7441e5,#5124ba)!important;color:#fff!important}
+.af-actions .af-secondary:nth-child(4){background:linear-gradient(115deg,#ff5675,#ed2e59)!important;color:#fff!important}
+.af-scene{border:2px solid #d3edff;min-height:360px;background:linear-gradient(165deg,#c3f0ff,#ecfaff 49%,#a8e1ff 50%,#6dceee 100%);box-shadow:0 20px 45px #0c6fae20}
+.af-scene::before{background:radial-gradient(circle at 24% 18%,#fff9,transparent 26%),linear-gradient(transparent 68%,#0b82b019)}
+@media(max-width:900px){.af-hero{grid-template-columns:1fr;padding-top:28px}.af-scene{min-height:300px}.af-menu{justify-content:flex-start}}
+@media(max-width:600px){.af-nav{padding:16px 14px 12px;gap:10px}.af-brand{gap:12px}.af-logo{width:57px;height:57px;font-size:29px}.af-brand-title{font-size:28px}.af-brand-sub{font-size:11px}.af-menu{gap:9px}.af-menu button{font-size:12px!important;min-height:44px;padding:11px 12px!important;flex:0 1 auto}.af-hero{padding:24px 17px 40px;gap:26px}.af-hero h2{font-size:clamp(37px,9vw,55px);line-height:1.1;margin:20px 0}.af-kicker{font-size:17px}.af-location{font-size:17px}.af-hero-copy{font-size:15px;line-height:1.8}.af-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.af-actions .af-primary{grid-column:1/-1;max-width:none}.af-actions .af-secondary:nth-child(4){grid-column:1/-1}.af-actions button{font-size:14px!important;min-height:56px!important}.af-scene{min-height:280px}}
+@media(prefers-reduced-motion:reduce){.af-topbar *, .af-topbar *::before,.af-topbar *::after{animation:none!important;transition:none!important}}
+</style>
 </head>
 <body class="bg-slate-100 font-sans min-h-screen text-slate-900 antialiased">
 
@@ -1857,7 +1957,7 @@
                 <h2>DIGITAL WATER<br><span>SUPPLY PORTAL</span></h2>
                 <div class="af-location">Shekhpur Daud, Azamgarh</div>
                 <p class="af-hero-copy">
-                    अब आपके पानी का बिल ऑनलाइन, आसान और सुरक्षित भी!मोटर वाटर बिलिंग सिस्टम (Motor Water Billing System) के माध्यम से आप अपना बिल, पेमेंट (भुगतान) और हिस्ट्री (इतिहास) कभी भी, कहीं भी चेक कर सकते हैं। .
+                    अब आपका पानी का बिल हुआ ऑनलाइन, आसान और सुरक्षित!मोटर वाटर बिलिंग सिस्टम से अपना बिल, पेमेंट और पुराना रिकॉर्ड (History) देखें कभी भी, कहीं भी।
                 </p>
                 <div class="af-actions">
                     <button class="af-primary" onclick="openCustomerBillWidget()">🔍 Apna Bill Check Karen <span class="af-arrow-move">→</span></button>
@@ -1887,7 +1987,7 @@
             </div>
             <div class="af-admin-header-actions">
                 <button onclick="adminBackToHome()" class="af-home-btn">🏠 Back to Home</button>
-                <button onclick="logoutAdminGate()" class="bg-slate-950 hover:bg-red-700 text-white text-[10px] md:text-xs px-2.5 py-1 rounded-md font-bold transition-colors">🔒 Lock System</button>
+                <button onclick="logoutAdminGate()" class="bg-slate-950 hover:bg-red-700 text-white text-[10px] md:text-xs px-2.5 py-1 rounded-md font-bold transition-colors">🔒 Logout</button>
             </div>
         </div>
 
@@ -2621,7 +2721,7 @@
                         </div>
                     </div>
                     <div class="official-control-actions">
-                        <button class="official-control-btn danger" onclick="closeOfficialPostLoginDashboard()">✕ Back</button>
+                        <button class="official-control-btn danger" onclick="afLogoutOfficial()">🔒 Logout</button><button class="official-control-btn danger" onclick="closeOfficialPostLoginDashboard()">✕ Back</button>
                     </div>
                 </div>
             </div>
@@ -2788,7 +2888,7 @@
                             <div class="af-client-reference-brand-tag">— SECURE PAYMENT —</div>
                         </div>
                     </div>
-                    <button class="af-client-reference-back" onclick="closeClientPostLoginDashboard()">✕ Back</button>
+                    <button class="af-client-reference-back" onclick="closeClientPostLoginDashboard()">🔒 Logout</button>
                 </div>
 
                 <div class="af-client-reference-grid">
@@ -4196,11 +4296,10 @@
                     bill_amount:'0',paid_amount:'0',discount:'0',remaining_due:'0',
                     subject:'AquaFlow - OTP Verification',
                     otp:officialRecoveryOTP,
-                    message:`Your <strong>OTP</strong> for AquaFlow verification is <strong>${officialRecoveryOTP}</strong>.<br>
-Please enter this <strong>OTP</strong> to complete verification.<br>
-<strong>OTP:</strong> ${officialRecoveryOTP}<br>
-This OTP is valid for the current verification process.<br>
-Please do not share your <strong>OTP</strong> with anyone.`
+                    message:`Your OTP for AquaFlow verification is ${officialRecoveryOTP}.
+Please enter this OTP to complete verification.
+OTP: ${officialRecoveryOTP}
+Valid for 10 minutes. Do not share this code.`
                 });
                 document.getElementById('official-recovery-email-display').textContent=email;
                 document.getElementById('official-recovery-otp-box').classList.remove('hidden');
@@ -4287,11 +4386,10 @@ Please do not share your <strong>OTP</strong> with anyone.`
                     bill_amount:'0',paid_amount:'0',discount:'0',remaining_due:'0',
                     subject:'AquaFlow - Password Reset OTP',
                     otp:officialPasswordOTP,
-                    message:`Your <strong>Password Reset OTP</strong> is <strong>${officialPasswordOTP}</strong>.<br>
-Enter this <strong>OTP</strong> to continue the password reset process.<br>
-<strong>OTP:</strong> ${officialPasswordOTP}<br>
-This OTP is valid for the current verification process.<br>
-If you did not request this, please ignore this email.`
+                    message:`Your Password Reset OTP is ${officialPasswordOTP}.\n
+Enter this OTP to continue the password reset process.\n
+OTP: ${officialPasswordOTP}\n
+This OTP is valid for 10 minutes. If you did not request this, please ignore this email.`
                 });
                 document.getElementById('official-password-otp-email').textContent=email;
                 document.getElementById('official-password-otp-box').classList.remove('hidden');
@@ -4566,11 +4664,7 @@ Please do not share your <strong>OTP</strong> with anyone.`});
                     remaining_due: '0',
                     subject: 'AquaFlow - Password Reset OTP',
                     otp: adminRecoveryOTP,
-                    message: `Your <strong>Password Reset OTP</strong> is <strong>${adminRecoveryOTP}</strong>.<br>
-Enter this <strong>OTP</strong> to continue the password reset process.<br>
-<strong>OTP:</strong> ${adminRecoveryOTP}<br>
-This OTP is valid for the current verification process.<br>
-If you did not request this, please ignore this email.`});
+                    message: `AquaFlow password reset verification code: ${adminRecoveryOTP}. Enter this code to reset your password. This code expires in 10 minutes. If you did not request a password reset, please ignore this email.`});
 
 
                 document.getElementById('af-recovery-email-display').textContent = registeredEmail;
@@ -5476,7 +5570,17 @@ If you did not request this, please ignore this email.`});
                 }
 
                 rowsContainer.innerHTML = "";
-                history.forEach((p, index) => {
+                // Latest payment is always shown first, while preserving the original
+                // history index for Receipt/Edit actions. This makes September's 3
+                // payments appear newest -> oldest without changing stored history.
+                history.map((p, index) => ({p, index})).sort((a,b) => {
+                    const ta = Number(a.p?.timestamp || 0);
+                    const tb = Number(b.p?.timestamp || 0);
+                    if(ta && tb && ta !== tb) return tb - ta;
+                    const da = String(a.p?.date || '').split('/').reverse().join('-');
+                    const db = String(b.p?.date || '').split('/').reverse().join('-');
+                    return db.localeCompare(da);
+                }).forEach(({p, index}) => {
                     const row = document.createElement('tr');
                     row.className = "bg-white text-xs md:text-sm text-slate-700";
                     row.innerHTML = `
@@ -6037,59 +6141,226 @@ If you did not request this, please ignore this email.`});
             document.getElementById('cash-intake-amount').value = analytics.netGlobalDues;
         }
 
+        // Month receipt viewer: every payment made in the selected month is shown
+        // as its own receipt. This prevents multiple payments from being merged into
+        // one amount and lets the user see the exact dues-before / paid / dues-after
+        // state for each transaction.
         function generateIsolatedMonthReceiptView(holderObj, monthSegment) {
-            let timeString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            let dateString = new Date().toLocaleDateString('en-GB');
+            const monthLabel = String(monthSegment.month || 'Selected Month');
 
-            let itemsRowsHTML = "";
-            if(monthSegment.trips && monthSegment.trips.length > 0) {
-                monthSegment.trips.forEach((t, idx) => {
-                    itemsRowsHTML += `<tr><td style="padding: 3px 0;">${idx+1}. Trip (${t.date})</td><td style="text-align:right;">₹${Math.round(t.amount)}</td></tr>`;
-                });
-            } else {
-                itemsRowsHTML = `<tr><td colspan="2" style="color:gray; font-style:italic;">No custom logs found</td></tr>`;
+            function paymentBelongsToMonth(log) {
+                const target = monthLabel.toLowerCase();
+                const targetParts = target.match(/^([a-z]+)(?:\s+(\d{4}))?/i) || [];
+                const targetMonthName = (targetParts[1] || '').toLowerCase();
+                const targetYear = targetParts[2] || '';
+
+                const rawDate = String(log?.date || '').trim();
+                let d = null;
+                const dm = rawDate.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+                if(dm) d = new Date(Number(dm[3]), Number(dm[2]) - 1, Number(dm[1]));
+
+                if(!d && log?.timestamp) {
+                    const ts = Number(log.timestamp);
+                    if(Number.isFinite(ts) && ts > 0) d = new Date(ts);
+                }
+                if(!d || Number.isNaN(d.getTime())) return false;
+
+                const actualMonth = d.toLocaleString('en-US', {month:'long'}).toLowerCase();
+                const actualYear = String(d.getFullYear());
+                return actualMonth === targetMonthName && (!targetYear || actualYear === targetYear);
             }
 
-            let totalCalculatedRemainingDue = (monthSegment.prevDue + monthSegment.currentMonthBilled) - (monthSegment.paid + (monthSegment.concession || 0));
-            if(totalCalculatedRemainingDue < 0) totalCalculatedRemainingDue = 0;
+            const history = Array.isArray(holderObj.paymentHistory) ? holderObj.paymentHistory : [];
+            // Keep the original history index, but display the selected month's
+            // payments newest-first. Receipt numbers remain chronological (#1, #2, #3).
+            const monthPaymentsChronological = history
+                .map((log, idx) => ({log, idx}))
+                .filter(x => paymentBelongsToMonth(x.log))
+                .sort((a,b) => Number(a.log?.timestamp||0) - Number(b.log?.timestamp||0));
+            const monthPayments = [...monthPaymentsChronological].reverse();
 
-            let receiptHTML = `
-                <div style="text-align:center; font-weight:bold; border-bottom:1px dashed black; padding-bottom:8px; margin-bottom:8px;">
-                    <p style="font-size:15px; letter-spacing:1px; margin:0;">AQUAFLOW WATER SUPPLY</p>
-                    <p style="font-size:10px; margin:2px 0 0 0;">Shekhpur Daud, Azamgarh</p>
-                </div>
-                <div style="margin-bottom:8px; font-size:11px; line-height:1.4;">
-                    <p style="margin:2px 0;"><b>Date:</b> ${dateString} | ${timeString}</p>
-                    <p style="margin:2px 0;"><b>Account:</b> ${holderObj.name}</p>
-                    <p style="margin:2px 0;"><b>ID Ref:</b> ${holderObj.accountId}</p>
-                    <p style="margin:2px 0;"><b>Target Month:</b> ${monthSegment.month}</p>
-                </div>
-                
-                <table style="width:100%; font-size:11px; border-top:1px dashed black; margin-top:6px; font-family:monospace;">
-                    <thead><tr style="text-align:left;"><th style="padding-bottom:4px;">Trip Breakdown</th><th style="text-align:right; padding-bottom:4px;">Amt</th></tr></thead>
-                    <tbody>${itemsRowsHTML}</tbody>
-                </table>
+            // Build the trip breakdown once; it remains the bill basis for every
+            // individual payment receipt in this month.
+            let itemsRowsHTML = '';
+            if(monthSegment.trips && monthSegment.trips.length > 0) {
+                monthSegment.trips.forEach((t, idx) => {
+                    itemsRowsHTML += `<tr><td style="padding:3px 0;">${idx+1}. Trip (${t.date || 'N/A'})</td><td style="text-align:right;">₹${Math.round(Number(t.amount)||0)}</td></tr>`;
+                });
+            } else {
+                itemsRowsHTML = `<tr><td colspan="2" style="color:gray;font-style:italic;">No custom logs found</td></tr>`;
+            }
 
-                <table style="width:100%; font-size:11px; border-top:1px dashed black; border-bottom:1px dashed black; margin:6px 0; padding:4px 0; line-height:1.4;">
-                    <tr style="font-family:sans-serif;"><td>Prev. Outstanding Balance</td><td style="text-align:right;">₹${Math.round(monthSegment.prevDue)}</td></tr>
-                    <tr style="font-family:sans-serif;"><td>Current Month Billed</td><td style="text-align:right;">₹${Math.round(monthSegment.currentMonthBilled)}</td></tr>
-                    <tr style="font-family:sans-serif;"><td>Discount / Concession</td><td style="text-align:right; color:#7e22ce;">₹${Math.round(monthSegment.concession || 0)}</td></tr>
-                    <tr style="font-family:sans-serif;"><td>Amount Paid</td><td style="text-align:right; color:green; font-weight:bold;">₹${Math.round(monthSegment.paid)}</td></tr>
-                    <tr style="font-family:sans-serif; font-weight:bold; border-top:1px dotted #ccc;"><td>Total Settled</td><td style="text-align:right;">₹${Math.round((monthSegment.paid || 0) + (monthSegment.concession || 0))}</td></tr>
-                </table>
-                <div style="text-align:right; font-size:13px; font-weight:bold; margin-top:6px; color:#b91c1c;">
-                    Net Remaining Due: ₹${Math.round(totalCalculatedRemainingDue)}
-                </div>
-                <div style="text-align:center; font-size:9px; margin-top:10px; border-top:1px dashed #000; padding-top:6px; color:#555;">
-                    <b>Calculation:</b> Prev. Due + Current Bill − Discount − Paid = Remaining Due
-                </div>
-                <div style="text-align:center; font-size:9px; margin-top:20px; border-top:1px dashed #000; padding-top:6px; color:#555;">
-                    Report generated via AquaFlow System
+            const currentMonthBill = Math.max(0, Number(monthSegment.currentMonthBilled) || 0);
+            const previousMonthSegmentDue = Math.max(0, Number(monthSegment.prevDue) || 0);
+            const currentMonthDiscountTotal = Math.max(0, Number(monthSegment.concession) || 0);
+
+            // If no payment was recorded for the selected month, keep the normal
+            // detailed bill receipt available.
+            if(monthPayments.length === 0) {
+                const receiptPayable = Math.max(0, previousMonthSegmentDue + currentMonthBill - currentMonthDiscountTotal);
+                const receiptPaid = Math.max(0, Number(monthSegment.paid) || 0);
+                const receiptRemaining = Math.max(0, receiptPayable - receiptPaid);
+                const dateString = new Date().toLocaleDateString('en-GB');
+                const timeString = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+
+                document.getElementById('global-print-receipt-node').innerHTML = `
+                    <div style="text-align:center;font-weight:bold;border-bottom:1px dashed #000;padding-bottom:8px;margin-bottom:10px;">
+                        <p style="font-size:16px;letter-spacing:1px;margin:0;">AQUAFLOW WATER SUPPLY</p>
+                        <p style="font-size:10px;margin:2px 0 0;">Shekhpur Daud, Azamgarh</p>
+                        <p style="font-size:10px;margin:5px 0 0;color:#334155;">MONTHLY BILL / RECEIPT</p>
+                    </div>
+                    <div style="font-size:11px;text-align:left;line-height:1.5;">
+                        <p style="margin:2px 0;"><b>Receipt Date:</b> ${dateString} | ${timeString}</p>
+                        <p style="margin:2px 0;"><b>Account:</b> ${holderObj.name || 'N/A'}</p>
+                        <p style="margin:2px 0;"><b>ID Ref:</b> ${holderObj.accountId || 'N/A'}</p>
+                        <p style="margin:2px 0;"><b>Target Month:</b> ${monthLabel}</p>
+                    </div>
+                    <table style="width:100%;font-size:11px;border-top:1px dashed #000;margin-top:8px;font-family:monospace;">
+                        <thead><tr><th style="text-align:left;padding-bottom:4px;">Trip Breakdown</th><th style="text-align:right;">Amt</th></tr></thead>
+                        <tbody>${itemsRowsHTML}</tbody>
+                    </table>
+                    <table style="width:100%;font-size:11px;border-top:1px dashed #000;border-bottom:1px dashed #000;margin:8px 0;padding:5px 0;line-height:1.65;">
+                        <tr><td>Previous Outstanding Dues</td><td style="text-align:right;">₹${Math.round(previousMonthSegmentDue)}</td></tr>
+                        <tr><td><b>Current Month Bill (${monthLabel})</b></td><td style="text-align:right;font-weight:bold;">₹${Math.round(currentMonthBill)}</td></tr>
+                        <tr><td>Discount / Concession</td><td style="text-align:right;color:#7e22ce;">− ₹${Math.round(currentMonthDiscountTotal)}</td></tr>
+                        <tr style="border-top:1px dotted #ccc;font-weight:bold;"><td>Payable Amount</td><td style="text-align:right;">₹${Math.round(receiptPayable)}</td></tr>
+                        <tr><td>Amount Paid</td><td style="text-align:right;color:#059669;font-weight:bold;">₹${Math.round(receiptPaid)}</td></tr>
+                        <tr style="border-top:1px dotted #ccc;font-weight:bold;"><td>Remaining Dues</td><td style="text-align:right;color:#b91c1c;">₹${Math.round(receiptRemaining)}</td></tr>
+                    </table>
+                    <div style="text-align:center;font-size:9px;border-top:1px dashed #000;padding-top:7px;color:#555;line-height:1.55;">
+                        <b>Calculation:</b><br>
+                        Previous Dues + Current Month Bill − Discount = Payable Amount<br>
+                        ₹${Math.round(previousMonthSegmentDue)} + ₹${Math.round(currentMonthBill)} − ₹${Math.round(currentMonthDiscountTotal)} = ₹${Math.round(receiptPayable)}<br>
+                        Payable Amount − Amount Paid = Remaining Dues<br>
+                        ₹${Math.round(receiptPayable)} − ₹${Math.round(receiptPaid)} = ₹${Math.round(receiptRemaining)}
+                    </div>
+                `;
+                openWidgetBox('receiptPopupModal');
+                return;
+            }
+
+            // Each receipt is based on the exact transaction's saved before/after
+            // balance. No receipt creates a fresh copy of the same month's bill.
+            // The original monthly bill is shown only on chronological Receipt #1;
+            // later receipts only show the balance carried forward through payment.
+            const paymentSnapshots = monthPayments.map((entry, displayIndex) => {
+                const snap = getPaymentReceiptSnapshot(holderObj, entry.idx) || {};
+                const chronologicalNumber = monthPayments.length - displayIndex;
+                return {
+                    ...entry,
+                    receiptNumber: chronologicalNumber,
+                    before: Math.max(0, Number(snap.before) || 0),
+                    paid: Math.max(0, Number(snap.paid) || Number(entry.log?.amountPaid) || 0),
+                    discount: Math.max(0, Number(snap.discount) || Number(entry.log?.concession) || 0),
+                    after: Math.max(0, Number(snap.after) || 0)
+                };
+            });
+
+            let cardsHTML = `
+                <div style="text-align:center;padding:4px 0 12px;">
+                    <div style="font-size:18px;font-weight:950;letter-spacing:.6px;">PAYMENT RECEIPTS</div>
+                    <div style="font-size:11px;color:#64748b;margin-top:3px;">${holderObj.name || 'Account Holder'} • ${monthLabel}</div>
+                    <div style="font-size:10px;color:#475569;margin-top:5px;font-weight:800;">${monthPayments.length} payment${monthPayments.length === 1 ? '' : 's'} found • नवीनतम भुगतान सबसे ऊपर • प्रत्येक रसीद में भुगतान के समय का बकाया</div>
                 </div>
             `;
-            
-            document.getElementById('global-print-receipt-node').innerHTML = receiptHTML;
-            openWidgetBox('receiptPopupModal'); 
+
+            paymentSnapshots.forEach((entry, cardIndex) => {
+                const log = entry.log;
+                const before = entry.before;
+                const paid = entry.paid;
+                const discount = entry.discount;
+                const after = entry.after;
+                const receiptNumber = entry.receiptNumber;
+                const receiptTime = log.time ? ` | ${log.time}` : '';
+                const isFirstChronologicalReceipt = receiptNumber === 1;
+                // Display the month bill as it stood at THIS transaction, not the
+                // final month total (which may include trips added after payment).
+                const thisTime = Number(log.timestamp || 0);
+                const previousChronological = monthPaymentsChronological[receiptNumber - 2];
+                const previousTime = Number(previousChronological?.log?.timestamp || 0);
+                const monthTrips = Array.isArray(monthSegment.trips) ? monthSegment.trips : [];
+                const timestampOfTrip = t => Number(t.loggedAtTimestamp || t.timestamp || 0);
+                const knownTripTimes = monthTrips.length && monthTrips.every(t => timestampOfTrip(t) > 0);
+                const billedTrips = knownTripTimes && thisTime
+                    ? monthTrips.filter(t => timestampOfTrip(t) <= thisTime)
+                    : (isFirstChronologicalReceipt ? monthTrips : []);
+                const addedTrips = knownTripTimes && thisTime
+                    ? billedTrips.filter(t => timestampOfTrip(t) > previousTime)
+                    : billedTrips;
+                const billedByPayment = knownTripTimes && thisTime
+                    ? billedTrips.reduce((sum,t) => sum + (Number(t.amount)||0), 0)
+                    : (isFirstChronologicalReceipt ? currentMonthBill : null);
+                const newlyBilled = knownTripTimes && thisTime
+                    ? addedTrips.reduce((sum,t) => sum + (Number(t.amount)||0), 0)
+                    : (isFirstChronologicalReceipt ? currentMonthBill : null);
+                const previousDuesAtPayment = billedByPayment === null ? null : Math.max(0, before - billedByPayment);
+                const tripBreakdownForReceipt = addedTrips.length
+                    ? addedTrips.map((t,i) => `<tr><td style="padding:3px 0;">${i+1}. Trip (${t.date || 'N/A'})</td><td style="text-align:right;">₹${Math.round(Number(t.amount)||0)}</td></tr>`).join('')
+                    : `<tr><td colspan="2" style="padding:6px 0;color:#475569;">${knownTripTimes ? 'इस भुगतान से पहले कोई नया ट्रिप नहीं जोड़ा गया।' : 'पुराने ट्रिप का समय उपलब्ध नहीं है; नई बिलिंग की पुष्टि नहीं की जा सकती।'}</td></tr>`;
+
+                cardsHTML += `
+                    <section class="af-month-payment-receipt" style="background:#fff;border:1px solid #cbd5e1;border-radius:14px;padding:15px;margin:0 0 16px;box-shadow:0 5px 16px rgba(15,23,42,.10);break-inside:avoid;page-break-inside:avoid;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px dashed #94a3b8;padding-bottom:8px;margin-bottom:9px;">
+                            <div style="font-weight:950;font-size:14px;">🧾 PAYMENT RECEIPT #${receiptNumber}${receiptNumber === monthPayments.length ? ' — LATEST' : ''}</div>
+                            <div style="font-size:9px;font-weight:900;background:#e0f2fe;color:#075985;padding:4px 7px;border-radius:999px;white-space:nowrap;">${cardIndex + 1} / ${monthPayments.length}</div>
+                        </div>
+
+                        <div style="text-align:center;font-weight:bold;margin-bottom:9px;">
+                            <div style="font-size:15px;letter-spacing:1px;">AQUAFLOW WATER SUPPLY</div>
+                            <div style="font-size:10px;margin-top:2px;color:#334155;">Shekhpur Daud, Azamgarh</div>
+                        </div>
+
+                        <div style="font-size:11px;text-align:left;line-height:1.5;">
+                            <p style="margin:2px 0;"><b>Payment Date:</b> ${log.date || 'N/A'}${receiptTime}</p>
+                            <p style="margin:2px 0;"><b>Account:</b> ${holderObj.name || 'N/A'}</p>
+                            <p style="margin:2px 0;"><b>ID Ref:</b> ${holderObj.accountId || 'N/A'}</p>
+                            <p style="margin:2px 0;"><b>Month:</b> ${monthLabel}</p>
+                            <p style="margin:5px 0 2px;color:#475569;font-size:10px;"><b>नोट:</b> इस रसीद में भुगतान से पहले का वास्तविक बकाया, इस भुगतान की जमा राशि एवं छूट, और भुगतान के बाद का शेष बकाया दिखाया गया है।</p>
+                            ${log.paymentMode ? `<p style="margin:2px 0;"><b>Payment Mode:</b> ${log.paymentMode}</p>` : ''}
+                            ${log.paidByClientName ? `<p style="margin:2px 0;"><b>Paid by Client:</b> ${log.paidByClientName}${log.paidByClientId ? ` (${log.paidByClientId})` : ''}</p>` : ''}
+                        </div>
+
+                        <table style="width:100%;font-size:11px;border-top:1px dashed #000;margin-top:9px;font-family:monospace;">
+                            <thead><tr><th style="text-align:left;padding:5px 0;">Trips Added Before This Payment</th><th style="text-align:right;">Amt</th></tr></thead>
+                            <tbody>${tripBreakdownForReceipt}</tbody>
+                        </table>
+
+                        <table style="width:100%;font-size:11px;border-top:1px dashed #000;border-bottom:1px dashed #000;margin:8px 0;padding:5px 0;line-height:1.65;">
+                            <tr><td>Previous Dues / Carry Forward</td><td style="text-align:right;">${previousDuesAtPayment === null ? 'Historical data unavailable' : `₹${Math.round(previousDuesAtPayment)}`}</td></tr>
+                            <tr><td><b>Current Month Bill (by payment time)</b></td><td style="text-align:right;font-weight:bold;">${billedByPayment === null ? 'Historical data unavailable' : `₹${Math.round(billedByPayment)}`}</td></tr>
+                            <tr><td>New Trip Bill Since Previous Payment</td><td style="text-align:right;">${newlyBilled === null ? 'Historical data unavailable' : `₹${Math.round(newlyBilled)}`}</td></tr>
+                            <tr><td style="font-weight:950;">💰 Total Dues Before This Payment</td><td style="text-align:right;font-weight:950;color:#1e3a8a;">₹${Math.round(before)}</td></tr>
+                            <tr><td>Discount / Concession</td><td style="text-align:right;color:#7e22ce;">− ₹${Math.round(discount)}</td></tr>
+                            <tr><td style="font-weight:950;">Amount Paid</td><td style="text-align:right;color:#059669;font-weight:950;">₹${Math.round(paid)}</td></tr>
+                            <tr style="border-top:1px dotted #ccc;font-weight:950;"><td>🔴 Remaining Dues After This Payment</td><td style="text-align:right;color:#b91c1c;font-weight:950;">₹${Math.round(after)}</td></tr>
+                        </table>
+
+                        <div style="background:${after > 0 ? '#fff7ed' : '#ecfdf5'};border:1px solid ${after > 0 ? '#fed7aa' : '#a7f3d0'};border-radius:9px;padding:9px;text-align:center;font-size:12px;font-weight:950;color:${after > 0 ? '#c2410c' : '#047857'};">
+                            ${after > 0 ? `Payment #${receiptNumber} के बाद ₹${Math.round(after)} बकाया शेष` : `Payment #${receiptNumber} के बाद ₹0 — पूरा भुगतान हो गया`}
+                        </div>
+
+                        <div style="text-align:center;font-size:9px;margin-top:10px;border-top:1px dashed #000;padding-top:7px;color:#555;line-height:1.55;">
+                            <b>इस भुगतान का हिसाब:</b><br>
+                            कुल बकाया − छूट − जमा राशि = शेष बकाया<br>
+                            ₹${Math.round(before)} − ₹${Math.round(discount)} − ₹${Math.round(paid)} = ₹${Math.round(after)}
+                        </div>
+                    </section>
+                `;
+            });
+
+            const totalPaidInMonth = monthPayments.reduce((sum, x) => sum + (Number(x.log.amountPaid) || 0), 0);
+            const totalDiscountInMonth = monthPayments.reduce((sum, x) => sum + (Number(x.log.concession) || 0), 0);
+
+            cardsHTML += `
+                <div style="background:#0f172a;color:#fff;border-radius:12px;padding:12px;margin-top:4px;text-align:center;">
+                    <div style="font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;">${monthLabel} Payment Summary</div>
+                    <div style="font-size:12px;margin-top:6px;">${monthPayments.length} Separate Receipt${monthPayments.length === 1 ? '' : 's'} • Total Amount Paid: ₹${Math.round(totalPaidInMonth)} • Total Concession: ₹${Math.round(totalDiscountInMonth)}</div>
+                    <div style="font-size:9px;color:#cbd5e1;margin-top:4px;">यह केवल मासिक सारांश है। ऊपर प्रत्येक भुगतान की अलग रसीद और उसका हिसाब दिया गया है।</div>
+                </div>
+            `;
+
+            document.getElementById('global-print-receipt-node').innerHTML = cardsHTML;
+            openWidgetBox('receiptPopupModal');
         }
 
         window.executeIsolatedMonthReceiptTrigger = function() {
@@ -6511,7 +6782,7 @@ If you did not request this, please ignore this email.`});
                         </div>
                         ` : `
                         <div class="p-4 bg-emerald-50 text-emerald-800 font-bold text-xs md:text-sm text-center border border-dashed border-emerald-300 rounded-lg">
-                            🎉 Sabhi months cleared hain! Koi dues baaki nahi hai.
+                            🎉 सभी महीनों का भुगतान हो चुका है। कोई भी राशि बकाया नहीं है।.
                         </div>
                         `}
 
@@ -6672,21 +6943,25 @@ If you did not request this, please ignore this email.`});
                     <p style="margin:2px 0;"><b>Holder Name:</b> ${holder.name || 'N/A'}</p>
                     <p style="margin:2px 0;"><b>Account UID:</b> ${holder.accountId || 'N/A'}</p>
                 </div>
+                <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:9px;margin:8px 0;font-size:11px;line-height:1.55;">
+                    <div style="font-weight:950;color:#1e3a8a;margin-bottom:3px;">📌 Payment se pehle</div>
+                    <div>Total Dues Before This Payment: <b>₹${Math.round(s.before)}</b></div>
+                    <div style="color:#64748b;">Yahi amount is payment ke start par outstanding tha.</div>
+                </div>
                 <table style="width:100%; font-size:11px; border-top:1px dashed black; border-bottom:1px dashed black; margin:6px 0; padding:4px 0; line-height:1.75;">
-                    <tr><td>Total Dues Before Payment</td><td style="text-align:right; font-weight:bold;">₹${Math.round(s.before)}</td></tr>
+                    <tr><td>Payment / Amount Received</td><td style="text-align:right; color:#059669; font-weight:bold;">₹${Math.round(s.paid)}</td></tr>
                     <tr><td>Discount / Concession</td><td style="text-align:right; color:#7e22ce;">− ₹${Math.round(s.discount)}</td></tr>
-                    <tr><td>Amount Received</td><td style="text-align:right; color:#059669; font-weight:bold;">₹${Math.round(s.paid)}</td></tr>
                     <tr style="border-top:1px dotted #bbb;"><td style="font-weight:bold;">Total Settled</td><td style="text-align:right; font-weight:bold;">₹${Math.round(s.settled)}</td></tr>
                 </table>
-                <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:6px; padding:7px; margin-top:7px;">
-                    <div style="text-align:center; font-size:12px; font-weight:bold; color:#b91c1c;">
-                        Remaining Dues: ₹${Math.round(s.after)}
+                <div style="background:${s.after > 0 ? '#fff7ed' : '#ecfdf5'}; border:1px solid ${s.after > 0 ? '#fed7aa' : '#a7f3d0'}; border-radius:10px; padding:10px; margin-top:8px;">
+                    <div style="text-align:center; font-size:13px; font-weight:950; color:${s.after > 0 ? '#c2410c' : '#047857'};">
+                        ${s.after > 0 ? `Payment ke baad Remaining Dues: ₹${Math.round(s.after)}` : 'Payment ke baad Remaining Dues: ₹0 — CLEAR'}
                     </div>
                 </div>
                 <div style="text-align:center; font-size:9px; margin-top:12px; border-top:1px dashed #000; padding-top:7px; color:#555; line-height:1.5;">
-                    <b>Calculation:</b><br>
+                    <b>Simple Calculation:</b><br>
+                    Payment se pehle dues − Discount − Amount Paid = Payment ke baad dues<br>
                     ₹${Math.round(s.before)} − ₹${Math.round(s.discount)} − ₹${Math.round(s.paid)} = ₹${Math.round(s.after)}
-                    <br>Total Dues − Discount − Amount Received = Remaining Dues
                     ${s.historical ? '<br><span style="font-size:8px;">Older payment record: calculated from recorded bill/payment data.</span>' : ''}
                 </div>
             `;
@@ -6733,7 +7008,7 @@ If you did not request this, please ignore this email.`});
                 await emailjs.send(EMAILJS_CONFIG.serviceId,EMAILJS_CONFIG.templateId,{
                     to_email:email,
                     email:email,
-                    holder_name:client.name||'Client',
+                    holder_name:clientId||'Client',
                     account_id:client.clientId||'N/A',
                     mobile:'',
                     bill_date:new Date(client.createdAt||Date.now()).toLocaleDateString('en-GB'),
@@ -7101,7 +7376,8 @@ If you did not request this, please ignore this email.`});
 
 
 
-    </script>
+window.afLogoutOfficial=function(){officialAuthenticated=false;officialRecoveryOTP=null;officialPasswordOTP=null;closeOfficialPostLoginDashboard();document.getElementById('officialLoginPanelModal')?.classList.remove('official-recovery-fullscreen');document.getElementById('official-login-password')?.setAttribute('value','');alert('Official logged out. Please login again.');};
+</script>
 
     <div id="af-payment-confirm-overlay" class="af-confirm-overlay">
         <div id="af-payment-confirm-card" class="af-confirm-card">
@@ -7179,6 +7455,91 @@ If you did not request this, please ignore this email.`});
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bind); else bind();
   setTimeout(bind,500);
+})();
+
+
+</script>
+
+
+<!-- Laptop keyboard shortcuts: only active in authenticated admin workspace. -->
+<style>
+#af-key-help{position:fixed;right:18px;bottom:18px;z-index:9997;background:#123e64;color:white;border:0;border-radius:30px;padding:12px 18px;font-weight:800;box-shadow:0 6px 20px #0004;cursor:pointer}
+#af-key-panel{position:fixed;right:18px;bottom:76px;z-index:2147483604;background:white;color:#102a43;border:1px solid #bfdbfe;border-radius:18px;padding:18px;box-shadow:0 14px 45px #0004;width:min(340px,calc(100vw - 36px));font:14px system-ui}
+#af-key-panel p{margin:9px 0}#af-key-panel kbd{background:#e0f2fe;border-radius:6px;padding:4px 8px;font-weight:bold}
+@media print{#af-key-help,#af-key-panel{display:none!important}}
+</style>
+<button id="af-key-help" type="button" hidden onclick="document.getElementById('af-key-panel').hidden=!document.getElementById('af-key-panel').hidden">⌨ Shortcuts</button>
+<div id="af-key-panel" hidden role="dialog" aria-label="Keyboard shortcuts">
+<strong>⌨ AquaFlow Laptop Shortcuts</strong>
+<p><kbd>F2</kbd> New Account &nbsp; <kbd>F3</kbd> New Bill Entry</p>
+<p><kbd>F4</kbd> Collect Payment &nbsp; <kbd>F6</kbd> Payment History</p>
+<p><kbd>F7</kbd> Check Bill / Receipt</p>
+<p><kbd>Esc</kbd> Close this help / active popup (not payment confirmation)</p>
+<p style="font-size:12px;color:#64748b">Shortcuts only work inside the logged-in Admin dashboard and never submit payments automatically.</p>
+<button type="button" onclick="document.getElementById('af-key-panel').hidden=true" style="background:#123e64;color:white;border:0;border-radius:9px;padding:9px 16px">Close</button>
+</div>
+<script>
+(function(){
+ const dashboard=()=>{const x=document.getElementById('admin-workspace-panel');return x&&!x.classList.contains('hidden')&&getComputedStyle(x).display!=='none'};
+ const help=document.getElementById('af-key-help'),panel=document.getElementById('af-key-panel');
+ const sync=()=>{help.hidden=!dashboard();if(!dashboard())panel.hidden=true};
+ new MutationObserver(sync).observe(document.getElementById('admin-workspace-panel'),{attributes:true,attributeFilter:['class','style']});sync();
+ document.addEventListener('keydown',function(e){
+   if(!dashboard()||e.altKey||e.ctrlKey||e.metaKey)return;
+   const typing=e.target.closest&&e.target.closest('input,textarea,select,[contenteditable="true"]');
+   if(typing&&e.key!=='Escape')return;
+   const actions={F2:()=>openWidgetBox('adminAddHolderModal'),F3:()=>openTripEntryModalPopup(),F4:()=>openPaymentGatewayPopupModal(),F6:()=>openPaidSummaryModalPopup(),F7:()=>openCustomerBillWidget()};
+   if(actions[e.key]){e.preventDefault();if(!panel.hidden)panel.hidden=true;actions[e.key]();return}
+   if(e.key==='Escape'){
+     if(!panel.hidden){e.preventDefault();panel.hidden=true;return}
+     const paymentConfirm=document.getElementById('af-payment-confirm-overlay');
+     if(paymentConfirm&&getComputedStyle(paymentConfirm).display!=='none')return;
+     const visible=[...document.querySelectorAll('.modal-blur-bg')].filter(el=>getComputedStyle(el).display!=='none');
+     if(visible.length&&typeof closeWidgetBox==='function'){e.preventDefault();closeWidgetBox(visible[visible.length-1].id)}
+   }
+ });
+})();
+</script>
+
+<script id="af-login-bill-keyboard-fix">
+(function(){
+  // Do not trap the Space key: native input typing, button activation and select search remain intact.
+  const groups=[
+    {modal:'loginPanelModal',fields:['admin-username-input','admin-pass-key-input'],submit:'verifyAndUnlockAdminWorkspace'},
+    {modal:'officialLoginPanelModal',fields:['official-login-username','official-login-password'],submit:'verifyOfficialLogin'},
+    {modal:'officialLoginPanelModal',fields:['official-setup-username','official-setup-password','official-setup-confirm','official-setup-recovery-email','official-setup-recovery-confirm'],submit:'saveOfficialLoginPassword'},
+    {modal:'clientLoginModal',fields:['client-login-identifier','client-login-password'],submit:'verifyClientLogin'},
+    {modal:'customerViewModal',fields:['search-holder-id'],submit:'executePublicStatementSearch'},
+    {modal:'customerViewModal',fields:['search-filter-isolated-month'],submit:'executeIsolatedMonthReceiptTrigger'}
+  ];
+  const visible=(node)=>!!node && !node.classList.contains('hidden') && getComputedStyle(node).display!=='none' && getComputedStyle(node).visibility!=='hidden';
+  document.addEventListener('keydown',function(event){
+    if(event.key!=='Enter'||event.isComposing||event.repeat||event.ctrlKey||event.altKey||event.metaKey||event.shiftKey)return;
+    const input=event.target;
+    if(!input||!input.id||!['INPUT','SELECT'].includes(input.tagName))return;
+    for(const group of groups){
+      if(!group.fields.includes(input.id))continue;
+      const modal=document.getElementById(group.modal);
+      if(!visible(modal)||!modal.contains(input))return;
+      if(group.submit==='saveOfficialLoginPassword' && !visible(document.getElementById('official-login-setup')))return;
+      if(group.submit==='verifyOfficialLogin' && !visible(document.getElementById('official-login-existing')))return;
+      if(group.submit==='executeIsolatedMonthReceiptTrigger' && !document.getElementById('search-filter-isolated-month')?.value)return;
+      if(group.submit==='executePublicStatementSearch' && !document.getElementById('search-holder-id')?.value)return;
+      const fn=window[group.submit];
+      if(typeof fn==='function'){event.preventDefault();fn();}
+      return;
+    }
+  });
+  // Hardware F2 is often brightness-down: Ctrl+Shift+F opens new account instead.
+  document.addEventListener('keydown',function(event){
+    if(!(event.ctrlKey&&event.shiftKey&&event.key.toLowerCase()==='f')||event.altKey||event.metaKey)return;
+    const dash=document.getElementById('admin-workspace-panel');
+    if(!visible(dash))return;
+    event.preventDefault();
+    if(typeof window.openWidgetBox==='function')window.openWidgetBox('adminAddHolderModal');
+  });
+  const help=document.getElementById('af-key-panel');
+  if(help){const p=help.querySelector('p');if(p)p.innerHTML='<kbd>Ctrl + Shift + F</kbd> New Account (F2 brightness की जगह) &nbsp; <kbd>F3</kbd> New Bill Entry';}
 })();
 </script>
 </body>
